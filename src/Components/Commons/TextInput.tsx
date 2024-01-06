@@ -103,9 +103,13 @@ const TextInput = forwardRef<RNInput, ITextInputProps>((props, ref) => {
   };
 
   useEffect(() => {
-    // console.log(`${props.label} is ${props.isError ? 'error' : 'ok'}`);
+    console.log(
+      `[TEXT INPUT] => ${props.label} is ${props.isError ? 'error' : 'ok'}`,
+    );
     if (props.isError) {
       animateTo(2);
+    } else {
+      animateTo(0);
     }
   }, [props.isError]);
 
