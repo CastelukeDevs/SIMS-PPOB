@@ -45,6 +45,7 @@ export type ITextInputProps = {
   containerStyle?: ViewStyle;
   labelStyle?: TextStyle;
   currencyStyle?: TextStyle;
+  errorMessage?: string;
 } & IMergedTextInput &
   TextInputProps;
 
@@ -210,7 +211,7 @@ const TextInput = forwardRef<RNInput, ITextInputProps>((props, ref) => {
         {showIcon(props.iconTrailing)}
       </Animated.View>
       <Text style={[styles.ErrorText, props.containerStyle]}>
-        Error message
+        {props.errorMessage || ' '}
       </Text>
     </>
   );
