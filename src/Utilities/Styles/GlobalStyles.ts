@@ -1,23 +1,9 @@
 import {StyleSheet} from 'react-native';
 
 export const Dimens = {
-  padding: 12,
+  padding: 18,
   radius: 4,
 };
-
-export const Color = {
-  light: '#ffffff',
-  dark: '#000000',
-  primary: '#000000',
-  active: '#4361EE',
-  accent: '#E3362B',
-  error: '#ff6347',
-} as const;
-/**
- * #4361EE
- * #70D6FF
- * #4CC9F0
- */
 
 export const Opacity = {
   100: 'FF',
@@ -122,6 +108,21 @@ export const Opacity = {
   1: '03',
   0: '00',
 };
+
+export const Color = {
+  light: '#ffffff',
+  dark: '#000000',
+  primary: '#000000',
+  active: '#4361EE',
+  inactive: '#000000' + Opacity[50],
+  accent: '#E3362B',
+  error: '#ff6347',
+} as const;
+/**
+ * #4361EE
+ * #70D6FF
+ * #4CC9F0
+ */
 
 export const DefaultStyle = StyleSheet.create({
   Base: {flex: 1},

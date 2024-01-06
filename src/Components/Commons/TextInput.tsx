@@ -73,7 +73,7 @@ const TextInput = forwardRef<RNInput, ITextInputProps>((props, ref) => {
   const inputState = useSharedValue(0);
 
   const interpolationInput = [0, 1, 2];
-  const interpolationOutput = [Color.dark, Color.active, Color.error];
+  const interpolationOutput = [Color.inactive, Color.active, Color.error];
 
   const inputAnimationStyle = useAnimatedStyle(() => {
     const colorInterpolation = interpolateColor(
