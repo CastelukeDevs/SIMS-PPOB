@@ -14,11 +14,18 @@ const SignUpScreen = ({navigation}: IMainNavProp<'authSignUpScreen'>) => {
   const inset = useSafeAreaInsets();
 
   const [email, setEmail] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [passwordSecured, setPasswordSecured] = useState(true);
+  const [confirmPasswordSecured, setConfirmPasswordSecured] = useState(true);
 
-  const secureTextHandler = () => {
+  const securePasswordTextHandler = () => {
     setPasswordSecured(!passwordSecured);
+  };
+  const secureConfirmPasswordTextHandler = () => {
+    setConfirmPasswordSecured(!confirmPasswordSecured);
   };
 
   const onSubmitHandler = () => {};
@@ -33,7 +40,7 @@ const SignUpScreen = ({navigation}: IMainNavProp<'authSignUpScreen'>) => {
       </View>
       <View style={styles.SectionContainer}>
         <Text style={[ThemeText.H1_Bold, {textAlign: 'center'}]}>
-          Masuk atau buat akun untuk memulai
+          Lengkapi data untuk membuat akun
         </Text>
       </View>
       <View style={styles.SectionContainer}>
@@ -43,7 +50,21 @@ const SignUpScreen = ({navigation}: IMainNavProp<'authSignUpScreen'>) => {
           onChangeText={setEmail}
           iconLeading={{name: 'at'}}
           autoCapitalize="none"
-          containerStyle={{marginBottom: 20}}
+          containerStyle={{marginBottom: 10}}
+        />
+        <TextInput
+          label="Nama Depan"
+          value={firstName}
+          onChangeText={setFirstName}
+          iconLeading={{name: 'person'}}
+          containerStyle={{marginBottom: 10}}
+        />
+        <TextInput
+          label="Nama Belakang"
+          value={lastName}
+          onChangeText={setLastName}
+          iconLeading={{name: 'person'}}
+          containerStyle={{marginBottom: 10}}
         />
         <TextInput
           label="Password"
@@ -52,29 +73,41 @@ const SignUpScreen = ({navigation}: IMainNavProp<'authSignUpScreen'>) => {
           iconLeading={{name: 'lock-closed'}}
           iconTrailing={{
             name: passwordSecured ? 'eye' : 'eye-off',
-            onPress: secureTextHandler,
+            onPress: securePasswordTextHandler,
           }}
           secureTextEntry={passwordSecured}
-          autoCapitalize="none"
+        />
+        <TextInput
+          label="Konfirmasi Password"
+          value={confirmPassword}
+          onChangeText={setConfirmPassword}
+          iconLeading={{name: 'lock-closed'}}
+          iconTrailing={{
+            name: confirmPasswordSecured ? 'eye' : 'eye-off',
+            onPress: secureConfirmPasswordTextHandler,
+          }}
+          secureTextEntry={passwordSecured}
         />
       </View>
-      <Button
-        label="Registrasi"
-        onPress={onSubmitHandler}
-        style={{marginBottom: 20}}
-      />
-      <Text
-        style={[
-          ThemeText.SubTitle_Regular,
-          {textAlign: 'center', color: Color.inactive},
-        ]}>
-        <Text>{'sudah punya akun? login '}</Text>
+      <View>
+        <Button
+          label="Registrasi"
+          onPress={onSubmitHandler}
+          style={{marginBottom: 20}}
+        />
         <Text
-          style={[ThemeText.SubTitle_Bold, {color: Color.accent}]}
-          onPress={onRegisterHandler}>
-          di sini
+          style={[
+            ThemeText.SubTitle_Regular,
+            {textAlign: 'center', color: Color.inactive},
+          ]}>
+          <Text>{'sudah punya akun? login '}</Text>
+          <Text
+            style={[ThemeText.SubTitle_Bold, {color: Color.accent}]}
+            onPress={onRegisterHandler}>
+            di sini
+          </Text>
         </Text>
-      </Text>
+      </View>
     </View>
   );
 };
@@ -85,6 +118,7 @@ const styles = StyleSheet.create({
   RootScreenContainer: {
     flex: 1,
     padding: Dimens.padding,
+    justifyContent: 'center',
   },
   SectionContainer: {
     marginBottom: 40,

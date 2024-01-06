@@ -57,12 +57,13 @@ const SignInScreen = ({navigation}: IMainNavProp<'authSignInScreen'>) => {
           secureTextEntry={passwordSecured}
           autoCapitalize="none"
           containerStyle={{marginBottom: 10}}
+          errorMessage=" "
         />
       </View>
       <Button
         label="Masuk"
         onPress={onSubmitHandler}
-        // style={{marginBottom: 20}}
+        style={{marginBottom: 20}}
       />
       <Text
         style={[
@@ -86,6 +87,7 @@ const styles = StyleSheet.create({
   RootScreenContainer: {
     flex: 1,
     padding: Dimens.padding,
+    justifyContent: 'center',
   },
   SectionContainer: {
     marginBottom: 40,
