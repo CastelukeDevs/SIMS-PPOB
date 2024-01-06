@@ -1,12 +1,8 @@
+import {IIconMode, IIconName, getIconName} from '@Utilities/Tools/IconTools';
 import React from 'react';
 import IonIcon from 'react-native-vector-icons/Ionicons';
-import {
-  IIconMode,
-  IIconName,
-  getIconName,
-} from '../../Utilities/Tools/IconTools';
 
-type IIconProps = {
+export type IIconProps = {
   name?: IIconName;
   size?: number;
   color?: string;
