@@ -2,15 +2,22 @@ import {StyleSheet} from 'react-native';
 
 export const Dimens = {
   padding: 12,
+  radius: 4,
 };
 
 export const Color = {
   light: '#ffffff',
   dark: '#000000',
   primary: '#000000',
-  accent: '#1573FE',
+  active: '#4361EE',
+  accent: '#E3362B',
   error: '#ff6347',
-};
+} as const;
+/**
+ * #4361EE
+ * #70D6FF
+ * #4CC9F0
+ */
 
 export const Opacity = {
   100: 'FF',
@@ -150,4 +157,4 @@ export const ThemeText = StyleSheet.create({
   Content_Bold: {color: Color.dark, fontSize: 12, fontWeight: 'bold'},
   Content_Light: {color: Color.dark, fontSize: 12, fontWeight: '200'},
   hyperlink: {color: Color.accent},
-});
+} as const);
