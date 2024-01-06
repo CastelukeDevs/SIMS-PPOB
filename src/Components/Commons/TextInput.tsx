@@ -231,7 +231,7 @@ const baseBorderedContainerStyle: ViewStyle = {
 
 const styles = StyleSheet.create({
   CoreContainer: {
-    paddingVertical: 8,
+    paddingVertical: 12,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',

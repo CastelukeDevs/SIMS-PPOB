@@ -64,7 +64,8 @@ export default Button;
 
 const styles = StyleSheet.create({
   RootComponentContainer: {
-    padding: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 16,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
