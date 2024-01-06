@@ -3,32 +3,73 @@ import {StyleSheet, Text, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {IMainNavProp} from '@Routes/RouteTypes';
+import {IText} from '@Types/CommonTypes';
 
 import {Color, Dimens, ThemeText} from '@Utilities/Styles/GlobalStyles';
+import {TextState} from '@Utilities/Data/Default';
+import ValidateString from '@Utilities/Tools/ValidateString';
 
-import TextInput from '@Components/Commons/TextInput';
 import Logo from '@Components/Logo';
+import TextInput from '@Components/Commons/TextInput';
 import Button from '@Components/Commons/Button';
 
 const SignUpScreen = ({navigation}: IMainNavProp<'authSignUpScreen'>) => {
   const inset = useSafeAreaInsets();
 
-  const [email, setEmail] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [passwordSecured, setPasswordSecured] = useState(true);
-  const [confirmPasswordSecured, setConfirmPasswordSecured] = useState(true);
+  const [email, setEmail] = useState<IText>(TextState);
+  const [firstName, setFirstName] = useState<IText>(TextState);
+  const [lastName, setLastName] = useState<IText>(TextState);
+  const [password, setPassword] = useState<IText>(TextState);
+  const [confirmPassword, setConfirmPassword] = useState<IText>(TextState);
 
-  const securePasswordTextHandler = () => {
-    setPasswordSecured(!passwordSecured);
+  const additionalValidation = (): string => {
+    const identical = password.text === confirmPassword.text;
+    if (identical) return '';
+    return 'Password tidak sama';
   };
-  const secureConfirmPasswordTextHandler = () => {
-    setConfirmPasswordSecured(!confirmPasswordSecured);
+  /**
+   * Check validity of all string validation and set error message to state
+   * @returns Boolean
+   */
+  const validityCheck = () => {
+    const test = [
+      ValidateString(email.text, 'email'),
+      ValidateString(firstName.text, 'name'),
+      ValidateString(lastName.text, 'name'),
+      ValidateString(password.text, 'password'),
+      ValidateString(confirmPassword.text, 'password'),
+      additionalValidation(),
+    ];
+
+    const testResult = test.map(item => ({
+      isValid: item.length < 1,
+      result: item,
+    }));
+
+    setEmail(prev => ({...prev, error: testResult[0].result[0]}));
+    setFirstName(prev => ({...prev, error: testResult[1].result[0]}));
+    setLastName(prev => ({...prev, error: testResult[2].result[0]}));
+    setPassword(prev => ({...prev, error: testResult[3].result[0]}));
+    setConfirmPassword(prev => ({
+      ...prev,
+      error: testResult[4].result[0] || (testResult[5].result as string),
+    }));
+
+    return testResult.every(testCase => testCase.isValid);
   };
 
-  const onSubmitHandler = () => {};
+  const onPasswordSecureToggle = () => {
+    setPassword(prev => ({...prev, isSecured: !prev.isSecured}));
+  };
+  const onConfirmPasswordSecureToggle = () => {
+    setConfirmPassword(prev => ({...prev, isSecured: !prev.isSecured}));
+  };
+
+  const onSubmitHandler = () => {
+    const valid = validityCheck();
+
+    if (!valid) return;
+  };
   const onRegisterHandler = () => {
     navigation.goBack();
   };
@@ -46,47 +87,53 @@ const SignUpScreen = ({navigation}: IMainNavProp<'authSignUpScreen'>) => {
       <View style={styles.SectionContainer}>
         <TextInput
           label="Email"
-          value={email}
-          onChangeText={setEmail}
+          value={email.text}
+          onChangeText={t => setEmail(prev => ({...prev, text: t}))}
           iconLeading={{name: 'at'}}
           autoCapitalize="none"
-          containerStyle={{marginBottom: 10}}
+          errorMessage={email.error}
+          containerStyle={styles.SpaceSmall}
         />
         <TextInput
           label="Nama Depan"
-          value={firstName}
-          onChangeText={setFirstName}
+          value={firstName.text}
+          onChangeText={t => setFirstName(prev => ({...prev, text: t}))}
           iconLeading={{name: 'person'}}
-          containerStyle={{marginBottom: 10}}
+          errorMessage={firstName.error}
+          containerStyle={styles.SpaceSmall}
         />
         <TextInput
           label="Nama Belakang"
-          value={lastName}
-          onChangeText={setLastName}
+          value={lastName.text}
+          onChangeText={t => setLastName(prev => ({...prev, text: t}))}
           iconLeading={{name: 'person'}}
-          containerStyle={{marginBottom: 10}}
+          errorMessage={lastName.error}
+          containerStyle={styles.SpaceSmall}
         />
         <TextInput
           label="Password"
-          value={password}
-          onChangeText={setPassword}
+          value={password.text}
+          onChangeText={t => setPassword(prev => ({...prev, text: t}))}
           iconLeading={{name: 'lock-closed'}}
           iconTrailing={{
-            name: passwordSecured ? 'eye' : 'eye-off',
-            onPress: securePasswordTextHandler,
+            name: password.isSecured ? 'eye' : 'eye-off',
+            onPress: onPasswordSecureToggle,
           }}
-          secureTextEntry={passwordSecured}
+          secureTextEntry={password.isSecured}
+          errorMessage={password.error}
+          containerStyle={styles.SpaceSmall}
         />
         <TextInput
           label="Konfirmasi Password"
-          value={confirmPassword}
-          onChangeText={setConfirmPassword}
+          value={confirmPassword.text}
+          onChangeText={t => setConfirmPassword(prev => ({...prev, text: t}))}
           iconLeading={{name: 'lock-closed'}}
           iconTrailing={{
-            name: confirmPasswordSecured ? 'eye' : 'eye-off',
-            onPress: secureConfirmPasswordTextHandler,
+            name: confirmPassword.isSecured ? 'eye' : 'eye-off',
+            onPress: onConfirmPasswordSecureToggle,
           }}
-          secureTextEntry={passwordSecured}
+          secureTextEntry={confirmPassword.isSecured}
+          errorMessage={confirmPassword.error}
         />
       </View>
       <View>
@@ -122,5 +169,8 @@ const styles = StyleSheet.create({
   },
   SectionContainer: {
     marginBottom: 40,
+  },
+  SpaceSmall: {
+    marginBottom: 10,
   },
 });

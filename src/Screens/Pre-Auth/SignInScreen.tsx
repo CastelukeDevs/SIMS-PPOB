@@ -5,15 +5,11 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {IMainNavProp} from '@Routes/RouteTypes';
 
 import {Color, Dimens, ThemeText} from '@Utilities/Styles/GlobalStyles';
+import ValidateString from '@Utilities/Tools/ValidateString';
 
-import TextInput from '@Components/Commons/TextInput';
 import Logo from '@Components/Logo';
+import TextInput from '@Components/Commons/TextInput';
 import Button from '@Components/Commons/Button';
-import {
-  IValidationResult,
-  validateEmail,
-  validatePassword,
-} from '@Utilities/Tools/Validation';
 
 const SignInScreen = ({navigation}: IMainNavProp<'authSignInScreen'>) => {
   const inset = useSafeAreaInsets();
@@ -21,26 +17,22 @@ const SignInScreen = ({navigation}: IMainNavProp<'authSignInScreen'>) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordSecured, setPasswordSecured] = useState(true);
-  const [emailError, setEmailError] = useState<IValidationResult[]>([]);
-  const [passwordError, setPasswordError] = useState<IValidationResult[]>([]);
+  const [emailError, setEmailError] = useState<string[]>([]);
+  const [passwordError, setPasswordError] = useState<string[]>([]);
 
   const secureTextHandler = () => {
     setPasswordSecured(!passwordSecured);
   };
 
   const onSubmitHandler = () => {
-    const validEmail = validateEmail(email);
+    const validEmail = ValidateString(email, 'email');
     setEmailError(validEmail);
-    const validPassword = validatePassword(password);
+    const validPassword = ValidateString(password, 'email');
     setPasswordError(validPassword);
-    // if (valid.length > 0) {
-    // }
-    console.log('email validity', validEmail);
   };
   const onRegisterHandler = () => {
     navigation.navigate('authSignUpScreen');
   };
-  console.log('is email valid', emailError.length < 1);
 
   return (
     <View style={[{paddingTop: inset.top}, styles.RootScreenContainer]}>
@@ -59,9 +51,8 @@ const SignInScreen = ({navigation}: IMainNavProp<'authSignInScreen'>) => {
           onChangeText={setEmail}
           iconLeading={{name: 'at'}}
           autoCapitalize="none"
-          containerStyle={{marginBottom: 10}}
-          isError={emailError?.length > 0}
-          errorMessage={emailError[0]?.description}
+          containerStyle={styles.SpaceSmall}
+          errorMessage={emailError[0]}
         />
         <TextInput
           label="Password"
@@ -74,9 +65,8 @@ const SignInScreen = ({navigation}: IMainNavProp<'authSignInScreen'>) => {
           }}
           secureTextEntry={passwordSecured}
           autoCapitalize="none"
-          containerStyle={{marginBottom: 10}}
-          isError={passwordError.length > 0}
-          errorMessage={passwordError[0]?.description}
+          containerStyle={styles.SpaceSmall}
+          errorMessage={passwordError[0]}
         />
       </View>
       <Button
@@ -110,5 +100,8 @@ const styles = StyleSheet.create({
   },
   SectionContainer: {
     marginBottom: 40,
+  },
+  SpaceSmall: {
+    marginBottom: 10,
   },
 });
