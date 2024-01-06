@@ -1,4 +1,4 @@
-import React, {forwardRef, useEffect} from 'react';
+import React, {forwardRef, useEffect, useState} from 'react';
 import {
   NativeSyntheticEvent,
   Platform,
@@ -39,13 +39,12 @@ export type ITextInputProps = {
   iconLeading?: IIconProps;
   iconTrailing?: IIconProps;
   options?: TextInputProps;
-  isError?: boolean;
+  errorMessage?: string;
   showLabel?: boolean;
   isMoney?: boolean;
   containerStyle?: ViewStyle;
   labelStyle?: TextStyle;
   currencyStyle?: TextStyle;
-  errorMessage?: string;
 } & IMergedTextInput &
   TextInputProps;
 
@@ -103,15 +102,9 @@ const TextInput = forwardRef<RNInput, ITextInputProps>((props, ref) => {
   };
 
   useEffect(() => {
-    console.log(
-      `[TEXT INPUT] => ${props.label} is ${props.isError ? 'error' : 'ok'}`,
-    );
-    if (props.isError) {
-      animateTo(2);
-    } else {
-      animateTo(0);
-    }
-  }, [props.isError]);
+    if (props.errorMessage) return animateTo(2);
+    animateTo(0);
+  }, [props.errorMessage]);
 
   const onChangeTextHandler = (v: string) => {
     props.isMoney
@@ -133,7 +126,7 @@ const TextInput = forwardRef<RNInput, ITextInputProps>((props, ref) => {
   };
 
   const onBlurHandler = (ev: NativeSyntheticEvent<TextInputFocusEventData>) => {
-    if (props.isError) return animateTo(2);
+    if (props.errorMessage) return animateTo(2);
     animateTo(0);
     props.onBlur?.(ev);
   };
