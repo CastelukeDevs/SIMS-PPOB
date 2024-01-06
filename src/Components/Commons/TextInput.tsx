@@ -18,7 +18,9 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import Icon, {IIconProps} from './Icon';
-import {Color, ThemeText} from '@Utilities/Styles/GlobalStyles';
+import {Color, Dimens, ThemeText} from '@Utilities/Styles/GlobalStyles';
+
+const AnimatedIcon = Animated.createAnimatedComponent(Icon);
 
 type ITextInputBordered = {
   mode?: 'Outlined' | 'Circled';
@@ -47,11 +49,15 @@ export type ITextInputProps = {
   TextInputProps;
 
 /**
+ * Custom Input text with animation
+ * @requires label string
+ * @requires value string
+ * @requires onChangeText (text:string)=>void
  *
- * @returns
+ * @default mode "Outlined"
  */
 const TextInput = forwardRef<RNInput, ITextInputProps>((props, ref) => {
-  const currentMode = props.mode || 'Circled';
+  const currentMode = props.mode || 'Outlined';
   const duration = 500;
 
   const [value, decimalValue] = props.isMoney
@@ -66,14 +72,28 @@ const TextInput = forwardRef<RNInput, ITextInputProps>((props, ref) => {
    */
   const inputState = useSharedValue(0);
 
+  const interpolationInput = [0, 1, 2];
+  const interpolationOutput = [Color.dark, Color.active, Color.error];
+
   const inputAnimationStyle = useAnimatedStyle(() => {
     const colorInterpolation = interpolateColor(
       inputState.value,
-      [0, 1, 2],
-      [Color.dark, Color.accent, Color.error],
+      interpolationInput,
+      interpolationOutput,
     );
     return {
       borderColor: colorInterpolation,
+    };
+  });
+
+  const iconAnimationStyle = useAnimatedStyle(() => {
+    const colorInterpolation = interpolateColor(
+      inputState.value,
+      interpolationInput,
+      interpolationOutput,
+    );
+    return {
+      color: colorInterpolation,
     };
   });
 
@@ -116,16 +136,14 @@ const TextInput = forwardRef<RNInput, ITextInputProps>((props, ref) => {
   const showLabel = (label: string) =>
     props.showLabel && (
       <Text
-        style={[
-          ThemeText.SubTitle_Regular,
-          styles.LabelText,
-          props.labelStyle,
-        ]}>
+        style={[ThemeText.SubTitle_Bold, styles.LabelText, props.labelStyle]}>
         {label}
       </Text>
     );
 
-  const showIcon = (icon: IIconProps | undefined) => icon && <Icon {...icon} />;
+  // const showIcon = (icon: IIconProps | undefined) => icon && <Icon {...icon} />;
+  const showIcon = (icon: IIconProps | undefined) =>
+    icon && <AnimatedIcon {...icon} style={iconAnimationStyle} />;
 
   const showLeadingMoney = () =>
     props.isMoney && (
@@ -203,7 +221,7 @@ const baseInputStyle: TextStyle = {
 };
 
 const baseBorderedContainerStyle: ViewStyle = {
-  paddingHorizontal: 16,
+  paddingHorizontal: 8,
   borderWidth: 1,
 };
 
@@ -230,7 +248,7 @@ const styles = StyleSheet.create({
   },
   ContainerOutlinedMode: {
     ...baseBorderedContainerStyle,
-    borderRadius: 12,
+    borderRadius: Dimens.radius,
   },
   ContainerUnderlinedMode: {
     paddingBottom: 4,
