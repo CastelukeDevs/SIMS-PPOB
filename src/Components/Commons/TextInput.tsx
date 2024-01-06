@@ -190,6 +190,7 @@ const TextInput = forwardRef<RNInput, ITextInputProps>((props, ref) => {
           getModeStyle(currentMode),
           inputAnimationStyle,
           props.containerStyle,
+          {marginBottom: 0},
         ]}>
         {showIcon(props.iconLeading)}
         {showLeadingMoney()}
@@ -208,6 +209,9 @@ const TextInput = forwardRef<RNInput, ITextInputProps>((props, ref) => {
         {showTrailingMoney()}
         {showIcon(props.iconTrailing)}
       </Animated.View>
+      <Text style={[styles.ErrorText, props.containerStyle]}>
+        Error message
+      </Text>
     </>
   );
 });
@@ -259,6 +263,11 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     width: '100%',
     marginBottom: 4,
+  },
+  ErrorText: {
+    textAlign: 'right',
+    color: Color.error,
+    marginVertical: 4,
   },
 });
 

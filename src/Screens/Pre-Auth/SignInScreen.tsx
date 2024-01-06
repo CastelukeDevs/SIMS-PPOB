@@ -43,7 +43,7 @@ const SignInScreen = ({navigation}: IMainNavProp<'authSignInScreen'>) => {
           onChangeText={setEmail}
           iconLeading={{name: 'at'}}
           autoCapitalize="none"
-          containerStyle={{marginBottom: 20}}
+          containerStyle={{marginBottom: 10}}
         />
         <TextInput
           label="Password"
@@ -56,12 +56,13 @@ const SignInScreen = ({navigation}: IMainNavProp<'authSignInScreen'>) => {
           }}
           secureTextEntry={passwordSecured}
           autoCapitalize="none"
+          containerStyle={{marginBottom: 10}}
         />
       </View>
       <Button
         label="Masuk"
         onPress={onSubmitHandler}
-        style={{marginBottom: 20}}
+        // style={{marginBottom: 20}}
       />
       <Text
         style={[
