@@ -34,4 +34,4 @@ type IAssets = keyof typeof Assets;
  * @returns Asset Image Source
  * @example getAssets('Logo-Logo')
  */
-export const getAssets = (name: IAssets) => Assets[name];
+export default (name: IAssets) => Assets[name];
