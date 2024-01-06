@@ -139,7 +139,6 @@ const TextInput = forwardRef<RNInput, ITextInputProps>((props, ref) => {
       </Text>
     );
 
-  // const showIcon = (icon: IIconProps | undefined) => icon && <Icon {...icon} />;
   const showIcon = (icon: IIconProps | undefined) =>
     icon && <AnimatedIcon {...icon} style={iconAnimationStyle} />;
 
