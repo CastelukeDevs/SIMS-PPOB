@@ -9,6 +9,11 @@ import {Color, Dimens, ThemeText} from '@Utilities/Styles/GlobalStyles';
 import TextInput from '@Components/Commons/TextInput';
 import Logo from '@Components/Logo';
 import Button from '@Components/Commons/Button';
+import {
+  IValidationResult,
+  validateEmail,
+  validatePassword,
+} from '@Utilities/Tools/Validation';
 
 const SignInScreen = ({navigation}: IMainNavProp<'authSignInScreen'>) => {
   const inset = useSafeAreaInsets();
@@ -16,15 +21,26 @@ const SignInScreen = ({navigation}: IMainNavProp<'authSignInScreen'>) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordSecured, setPasswordSecured] = useState(true);
+  const [emailError, setEmailError] = useState<IValidationResult[]>([]);
+  const [passwordError, setPasswordError] = useState<IValidationResult[]>([]);
 
   const secureTextHandler = () => {
     setPasswordSecured(!passwordSecured);
   };
 
-  const onSubmitHandler = () => {};
+  const onSubmitHandler = () => {
+    const validEmail = validateEmail(email);
+    setEmailError(validEmail);
+    const validPassword = validatePassword(password);
+    setPasswordError(validPassword);
+    // if (valid.length > 0) {
+    // }
+    console.log('email validity', validEmail);
+  };
   const onRegisterHandler = () => {
     navigation.navigate('authSignUpScreen');
   };
+  console.log('is email valid', emailError.length < 1);
 
   return (
     <View style={[{paddingTop: inset.top}, styles.RootScreenContainer]}>
@@ -44,6 +60,8 @@ const SignInScreen = ({navigation}: IMainNavProp<'authSignInScreen'>) => {
           iconLeading={{name: 'at'}}
           autoCapitalize="none"
           containerStyle={{marginBottom: 10}}
+          isError={emailError?.length > 0}
+          errorMessage={emailError[0]?.description}
         />
         <TextInput
           label="Password"
@@ -57,7 +75,8 @@ const SignInScreen = ({navigation}: IMainNavProp<'authSignInScreen'>) => {
           secureTextEntry={passwordSecured}
           autoCapitalize="none"
           containerStyle={{marginBottom: 10}}
-          errorMessage=" "
+          isError={passwordError.length > 0}
+          errorMessage={passwordError[0]?.description}
         />
       </View>
       <Button
