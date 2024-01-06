@@ -26,6 +26,7 @@ module.exports = {
           '@Routes': './src/Routes',
           '@Resources': './src/Resources',
           '@Redux': './src/Redux',
+          '@Assets': './src/Assets',
         },
       },
     ],

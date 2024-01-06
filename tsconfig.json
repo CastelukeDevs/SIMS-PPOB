@@ -10,7 +10,8 @@
       "@Screens/*": ["src/Screens/*"],
       "@Routes/*": ["src/Routes/*"],
       "@Resources/*": ["src/Resources/*"],
-      "@Redux/*": ["src/Redux/*"]
+      "@Redux/*": ["src/Redux/*"],
+      "@Assets/*": ["src/Assets/*"]
     }
   }
 }
