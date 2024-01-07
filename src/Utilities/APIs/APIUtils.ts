@@ -26,6 +26,7 @@ export type IAPIsCallOption = {
   params?: any;
   data?: any;
   auth?: boolean;
+  form?: boolean;
 } & ICancelSignal;
 
 export type IAPIResult = {message: string; status: number; data: any};
