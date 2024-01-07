@@ -8,6 +8,7 @@ import SignUpScreen from '@Screens/Pre-Auth/SignUpScreen';
 import DashboardScreen from '@Screens/Dashboard/DashboardScreen';
 import SplashScreen from '@Screens/SplashScreen';
 import useAuth from '@Utilities/Hooks/useAuth';
+import {Toasts} from '@backpackapp-io/react-native-toast';
 
 const Stack = createStackNavigator<IRootNav>();
 
@@ -28,6 +29,7 @@ const RootRoute = () => {
           </>
         )}
       </Stack.Navigator>
+      <Toasts />
     </NavigationContainer>
   );
 };

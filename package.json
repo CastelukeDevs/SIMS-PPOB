@@ -10,9 +10,11 @@
     "test": "jest",
     "fresh": "npm start -- --reset-cache",
     "reset-watchman": "watchman watch-del .; watchman watch-project .",
-    "fresh-all": "npm run reset-watchman; npm run fresh"
+    "fresh-all": "npm run reset-watchman; npm run fresh",
+    "install-ios": "npx pod-install ios"
   },
   "dependencies": {
+    "@backpackapp-io/react-native-toast": "^0.10.0",
     "@react-native-async-storage/async-storage": "^1.21.0",
     "@react-navigation/bottom-tabs": "^6.5.11",
     "@react-navigation/native": "^6.1.9",

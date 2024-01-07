@@ -15,6 +15,7 @@ import TextInput from '@Components/Commons/TextInput';
 import Button from '@Components/Commons/Button';
 import {authSignUpUser} from '@Redux/Actions/UserAction';
 import {IAPIResult} from '@Utilities/APIs/APIUtils';
+import {toast} from '@backpackapp-io/react-native-toast';
 
 const SignUpScreen = ({navigation}: IMainNavProp<'authSignUpScreen'>) => {
   const inset = useSafeAreaInsets();
@@ -84,6 +85,8 @@ const SignUpScreen = ({navigation}: IMainNavProp<'authSignUpScreen'>) => {
       .unwrap()
       .then((res: IAPIResult) => {
         console.log('dispatch result', res);
+        toast.success(res.message);
+
         if (res.status === 0) navigation.goBack();
       })
       .catch((err: IDispatchError) => {
