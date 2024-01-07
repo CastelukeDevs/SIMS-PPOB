@@ -17,5 +17,7 @@ export default (amount: number) => {
 
   const format = `${symbol} ${whole}${decimal}`;
 
-  return {symbol, whole, decimal, format};
+  const result = {symbol, whole, decimal, format};
+
+  return result;
 };

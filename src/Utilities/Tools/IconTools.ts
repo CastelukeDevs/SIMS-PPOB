@@ -24,4 +24,6 @@ enum IconList {
   'desktop',
   'rocket',
   'person',
+  'checkmark',
+  'close',
 }

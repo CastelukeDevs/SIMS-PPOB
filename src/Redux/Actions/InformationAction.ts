@@ -10,6 +10,7 @@ import APICall from '@Utilities/APIs/APICall';
 const GetBalancePrefix: IEndpoint = 'BUSINESS_BALANCE';
 const GetBannerPrefix: IEndpoint = 'BUSINESS_BANNER';
 const GetServicesPrefix: IEndpoint = 'BUSINESS_SERVICES';
+const TopUpPrefix: IEndpoint = 'BUSINESS_TOP_UP';
 
 export const getBalance = createAsyncThunk(
   GetBalancePrefix,
@@ -21,6 +22,7 @@ export const getBalance = createAsyncThunk(
     return data;
   },
 );
+
 export const getBanner = createAsyncThunk(
   GetBannerPrefix,
   async (props?: ICancelSignal) => {
@@ -31,6 +33,7 @@ export const getBanner = createAsyncThunk(
     return data;
   },
 );
+
 export const getServices = createAsyncThunk(
   GetServicesPrefix,
   async (props?: ICancelSignal) => {
@@ -41,6 +44,19 @@ export const getServices = createAsyncThunk(
     return data;
   },
 );
+
+export const topUpBalance = createAsyncThunk(
+  TopUpPrefix,
+  async (props: ICancelSignal & {top_up_amount: number}) => {
+    const data = await APICall(TopUpPrefix, {
+      abortController: props?.abortController,
+      data: {top_up_amount: props.top_up_amount},
+    });
+
+    return data;
+  },
+);
+
 export default (builder: ActionReducerMapBuilder<IInformationState>) => {
   builder
     .addCase(getBalance.pending, state => {
@@ -89,6 +105,22 @@ export default (builder: ActionReducerMapBuilder<IInformationState>) => {
         state.status = 'success';
         state.error = null;
         state.services = action.payload.data;
+      },
+    )
+    .addCase(topUpBalance.pending, state => {
+      state.status = 'fetching';
+      state.error = null;
+    })
+    .addCase(topUpBalance.rejected, (state, action) => {
+      state.status = 'error';
+      state.error = {message: action.error.message!, error: action.error};
+    })
+    .addCase(
+      topUpBalance.fulfilled,
+      (state, action: PayloadAction<IAPIResult<{balance: number}>>) => {
+        state.status = 'success';
+        state.error = null;
+        state.balance = action.payload.data.balance;
       },
     );
 };

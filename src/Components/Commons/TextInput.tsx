@@ -202,6 +202,9 @@ const TextInput = forwardRef<RNInput, ITextInputProps>((props, ref) => {
           onBlur={onBlurHandler}
           textContentType={props.secureTextEntry ? 'oneTimeCode' : undefined}
           keyboardType={props.isMoney ? 'number-pad' : props.keyboardType}
+          returnKeyType={
+            props.isMoney ? 'done' : props.returnKeyType || 'default'
+          }
         />
         {showTrailingMoney()}
         {showIcon(props.iconTrailing)}

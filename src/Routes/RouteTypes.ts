@@ -11,6 +11,10 @@ export type IRootNav = {
   authSignUpScreen: undefined;
   profileScreen: undefined;
   dashboardRoute: NavigatorScreenParams<IDashboardTabNav>;
+
+  topUpConfirmationModal: {amount: number};
+  topUpSuccessModal: {amount: number};
+  topUpFailedModal: {amount: number};
 };
 
 export type IDashboardTabNav = {

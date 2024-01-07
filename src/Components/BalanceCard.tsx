@@ -9,6 +9,7 @@ const secureString = (str: string) =>
 
 type IBalanceCardProps = {
   balance: number;
+  isSimple?: boolean;
 };
 const BalanceCard = (props: IBalanceCardProps) => {
   const balance = props.balance;
@@ -17,37 +18,47 @@ const BalanceCard = (props: IBalanceCardProps) => {
 
   const [balanceSecured, setBalanceSecured] = useState(true);
 
-  const displayBalance = balanceSecured
-    ? secureString(format.whole)
-    : format.whole;
+  const displayBalance =
+    balanceSecured && !props.isSimple
+      ? secureString(format.whole)
+      : format.whole;
 
-  const displayDecimal = balanceSecured
-    ? secureString(format.decimal)
-    : format.decimal;
+  const displayDecimal =
+    balanceSecured && !props.isSimple
+      ? secureString(format.decimal)
+      : format.decimal;
 
   return (
     <View style={styles.RootComponentContainer}>
       <Text style={[ThemeText.H3_Regular, styles.TextColor]}>Saldo anda</Text>
-      <Text style={[ThemeText.Hero_Bold, styles.TextColor]}>
+      <Text style={[ThemeText.Hero_Bold, styles.TextColor, styles.TopSpace]}>
         <Text style={styles.TextDim}>{symbol + ' '}</Text>
         <Text>{displayBalance}</Text>
-        <Text style={!balanceSecured && styles.TextDim}>{displayDecimal}</Text>
-      </Text>
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <Text
-          style={[
-            ThemeText.Title_Regular,
-            styles.TextColor,
-            {marginRight: 10},
-          ]}>
-          Lihat Saldo
+        <Text style={(!balanceSecured || props.isSimple) && styles.TextDim}>
+          {displayDecimal}
         </Text>
-        <Icon
-          name={balanceSecured ? 'eye' : 'eye-off'}
-          color={Color.light}
-          onPress={() => setBalanceSecured(!balanceSecured)}
-        />
-      </View>
+      </Text>
+      {!props.isSimple && (
+        <View
+          style={[
+            {flexDirection: 'row', alignItems: 'center'},
+            styles.TopSpace,
+          ]}>
+          <Text
+            style={[
+              ThemeText.Title_Regular,
+              styles.TextColor,
+              {marginRight: 10},
+            ]}>
+            Lihat Saldo
+          </Text>
+          <Icon
+            name={balanceSecured ? 'eye' : 'eye-off'}
+            color={Color.light}
+            onPress={() => setBalanceSecured(!balanceSecured)}
+          />
+        </View>
+      )}
     </View>
   );
 };
@@ -57,7 +68,6 @@ export default BalanceCard;
 const styles = StyleSheet.create({
   RootComponentContainer: {
     width: '100%',
-    aspectRatio: 4 / 2,
     backgroundColor: Color.accent,
     padding: Dimens.padding * 1.4,
     borderRadius: Dimens.padding,
@@ -68,5 +78,8 @@ const styles = StyleSheet.create({
   },
   TextDim: {
     opacity: 0.75,
+  },
+  TopSpace: {
+    marginTop: 20,
   },
 });

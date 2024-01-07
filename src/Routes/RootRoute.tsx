@@ -17,6 +17,9 @@ import TransactionsScreen from '@Screens/Dashboard/TransactionsScreen';
 import ProfileScreen from '@Screens/Dashboard/ProfileScreen';
 import Icon from '@Components/Commons/Icon';
 import {IIconName} from '@Utilities/Tools/IconTools';
+import TopUpConfirmationModal from '@Screens/Modal/TopUpConfirmationModal';
+import TopUpSuccessModal from '@Screens/Modal/TopUpSuccessModal';
+import TopUpFailedModal from '@Screens/Modal/TopUpFailedModal';
 
 const Stack = createStackNavigator<IRootNav>();
 const Tab = createBottomTabNavigator<IDashboardTabNav>();
@@ -37,6 +40,17 @@ const RootRoute = () => {
             <Stack.Screen name="dashboardRoute" component={DashboardRoute} />
           </>
         )}
+        <Stack.Group screenOptions={{presentation: 'transparentModal'}}>
+          <Stack.Screen
+            name="topUpConfirmationModal"
+            component={TopUpConfirmationModal}
+          />
+          <Stack.Screen
+            name="topUpSuccessModal"
+            component={TopUpSuccessModal}
+          />
+          <Stack.Screen name="topUpFailedModal" component={TopUpFailedModal} />
+        </Stack.Group>
       </Stack.Navigator>
       <Toasts />
     </NavigationContainer>
