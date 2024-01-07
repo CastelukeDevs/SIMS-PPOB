@@ -1,9 +1,10 @@
 import React, {useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useDispatch} from 'react-redux';
 
 import {IMainNavProp} from '@Routes/RouteTypes';
-import {IText} from '@Types/CommonTypes';
+import {IDispatchError, IErrorMessage, IText} from '@Types/CommonTypes';
 
 import {Color, Dimens, ThemeText} from '@Utilities/Styles/GlobalStyles';
 import {TextState} from '@Utilities/Data/Default';
@@ -12,9 +13,12 @@ import ValidateString from '@Utilities/Tools/ValidateString';
 import Logo from '@Components/Logo';
 import TextInput from '@Components/Commons/TextInput';
 import Button from '@Components/Commons/Button';
+import {authSignUpUser} from '@Redux/Actions/UserAction';
+import {IAPIResult} from '@Utilities/APIs/APIUtils';
 
 const SignUpScreen = ({navigation}: IMainNavProp<'authSignUpScreen'>) => {
   const inset = useSafeAreaInsets();
+  const dispatch = useDispatch<any>();
 
   const [email, setEmail] = useState<IText>(TextState);
   const [firstName, setFirstName] = useState<IText>(TextState);
@@ -69,6 +73,26 @@ const SignUpScreen = ({navigation}: IMainNavProp<'authSignUpScreen'>) => {
     const valid = validityCheck();
 
     if (!valid) return;
+    dispatch(
+      authSignUpUser({
+        email: email.text,
+        password: password.text,
+        first_name: firstName.text,
+        last_name: lastName.text,
+      }),
+    )
+      .unwrap()
+      .then((res: IAPIResult) => {
+        console.log('dispatch result', res);
+        if (res.status === 0) navigation.goBack();
+      })
+      .catch((err: IDispatchError) => {
+        console.log('error', err);
+
+        if (err.message.toLowerCase().includes('email')) {
+          setEmail(prev => ({...prev, error: err.message}));
+        }
+      });
   };
   const onRegisterHandler = () => {
     navigation.goBack();

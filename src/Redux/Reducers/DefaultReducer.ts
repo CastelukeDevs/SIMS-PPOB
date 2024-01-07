@@ -2,7 +2,7 @@ import {createSlice} from '@reduxjs/toolkit';
 
 export type IDefaultState = {};
 
-export const contactInitialState: IDefaultState = {
+export const defaultInitialState: IDefaultState = {
   // isLoading: false,
   // error: null,
   // userData: null,
@@ -10,10 +10,10 @@ export const contactInitialState: IDefaultState = {
 
 const DefaultReducer = createSlice({
   name: 'default',
-  initialState: contactInitialState,
+  initialState: defaultInitialState,
   reducers: {},
   // extraReducers: DefaultAction,
 });
 
 export const {} = DefaultReducer.actions;
-export default DefaultReducer;
+export default DefaultReducer.reducer;
