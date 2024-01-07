@@ -27,9 +27,14 @@ export type IAPIsCallOption = {
   data?: any;
   auth?: boolean;
   form?: boolean;
+  token?: string;
 } & ICancelSignal;
 
-export type IAPIResult = {message: string; status: number; data: any};
+export type IAPIResult<T = never> = {
+  message: string;
+  status: number;
+  data: T;
+};
 
 /**
  * Get endpoint from endpoint pools

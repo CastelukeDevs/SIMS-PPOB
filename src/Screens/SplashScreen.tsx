@@ -1,8 +1,6 @@
 import React, {useEffect} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import Icon from '../Components/Commons/Icon';
-import {useDispatch} from 'react-redux';
-import {fetchUser} from '@Redux/Actions/UserAction';
 import {IMainNavProp} from '@Routes/RouteTypes';
 // import Icon from 'react-native-vector-icons/Ionicons';
 

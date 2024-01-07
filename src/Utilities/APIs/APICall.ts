@@ -13,9 +13,9 @@ const APICall = async (endpoint: IEndpoint, options?: IAPIsCallOption) => {
 
   const selectEndpoint = getEndpoint(endpoint)!;
 
-  // const requestHeader = selectEndpoint.auth
-  //   ? {Authorization: `Bearer ${token}`}
-  //   : {};
+  const requestHeader = selectEndpoint.auth
+    ? {Authorization: `Bearer ${options?.token}`}
+    : {};
 
   const payloadForm = TransformObjectToForm(options?.data);
   console.log(`=> New API Call ${endpoint} with detail:`, {
@@ -29,13 +29,10 @@ const APICall = async (endpoint: IEndpoint, options?: IAPIsCallOption) => {
     data: options?.form ? payloadForm : options?.data,
     params: options?.params,
     signal: options?.abortController?.signal,
-    headers: options?.form
-      ? {
-          'Content-Type': 'multipart/form-data',
-        }
-      : {
-          'Content-Type': 'application/json',
-        },
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: requestHeader.Authorization || '',
+    },
   })
     .then((result: AxiosResponse<IAPIResult>) => {
       console.log(`=> [O] axios request ${endpoint} success`, result);
@@ -52,7 +49,7 @@ const APICall = async (endpoint: IEndpoint, options?: IAPIsCallOption) => {
       console.error(
         `=> [X] axios request ${endpoint} error with code: ${errorPayload.code} //message: ${errorPayload.message}`,
       );
-      console.error('=> [X] axios error:', error);
+      console.error('=> [X] axios error:', error.toJSON());
 
       throw errorPayload;
     });

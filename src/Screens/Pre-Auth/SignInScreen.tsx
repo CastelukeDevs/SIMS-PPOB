@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import React, {useRef, useState} from 'react';
+import {StyleSheet, Text, View, TextInput as RNInput} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 import {IMainNavProp} from '@Routes/RouteTypes';
@@ -10,9 +10,17 @@ import ValidateString from '@Utilities/Tools/ValidateString';
 import Logo from '@Components/Logo';
 import TextInput from '@Components/Commons/TextInput';
 import Button from '@Components/Commons/Button';
+import {useDispatch, useSelector} from 'react-redux';
+import {IRootStateType} from '@Redux/Store';
+import {authSignInUser} from '@Redux/Actions/UserAction';
 
 const SignInScreen = ({navigation}: IMainNavProp<'authSignInScreen'>) => {
   const inset = useSafeAreaInsets();
+  const dispatch = useDispatch<any>();
+  const stateReady =
+    useSelector((state: IRootStateType) => state.user).status !== 'fetching';
+
+  const passwordRef = useRef<RNInput>(null);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -20,15 +28,26 @@ const SignInScreen = ({navigation}: IMainNavProp<'authSignInScreen'>) => {
   const [emailError, setEmailError] = useState<string[]>([]);
   const [passwordError, setPasswordError] = useState<string[]>([]);
 
+  const checkValidity = () => {
+    const validEmail = ValidateString(email, 'email');
+    const validPassword = ValidateString(password, 'password');
+    setEmailError(validEmail);
+    setPasswordError(validPassword);
+    if (validEmail.length > 0 || validPassword.length > 0) return false;
+    return true;
+  };
   const secureTextHandler = () => {
     setPasswordSecured(!passwordSecured);
   };
 
   const onSubmitHandler = () => {
-    const validEmail = ValidateString(email, 'email');
-    setEmailError(validEmail);
-    const validPassword = ValidateString(password, 'email');
-    setPasswordError(validPassword);
+    // const validEmail = ValidateString(email, 'email');
+    // setEmailError(validEmail);
+    // const validPassword = ValidateString(password, 'email');
+    // setPasswordError(validPassword);
+    if (checkValidity() && stateReady) {
+      dispatch(authSignInUser({email, password}));
+    }
   };
   const onRegisterHandler = () => {
     navigation.navigate('authSignUpScreen');
@@ -53,8 +72,10 @@ const SignInScreen = ({navigation}: IMainNavProp<'authSignInScreen'>) => {
           autoCapitalize="none"
           containerStyle={styles.SpaceSmall}
           errorMessage={emailError[0]}
+          onSubmitEditing={() => passwordRef.current?.focus()}
         />
         <TextInput
+          ref={passwordRef}
           label="Password"
           value={password}
           onChangeText={setPassword}
@@ -73,6 +94,7 @@ const SignInScreen = ({navigation}: IMainNavProp<'authSignInScreen'>) => {
         label="Masuk"
         onPress={onSubmitHandler}
         style={{marginBottom: 20}}
+        disabled={!stateReady}
       />
       <Text
         style={[

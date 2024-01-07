@@ -18,9 +18,13 @@ export const userInitialState: IUserState = {
 const DefaultReducer = createSlice({
   name: 'user',
   initialState: userInitialState,
-  reducers: {},
+  reducers: {
+    resetUser: () => {
+      return {...userInitialState};
+    },
+  },
   extraReducers: UserAction,
 });
 
-export const {} = DefaultReducer.actions;
+export const {resetUser} = DefaultReducer.actions;
 export default DefaultReducer.reducer;
