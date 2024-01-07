@@ -1,13 +1,17 @@
-import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
+import {StyleSheet, Text, View} from 'react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useDispatch} from 'react-redux';
-import Button from '@Components/Commons/Button';
+
 import {resetUser} from '@Redux/Reducers/UserReducer';
 
+import Button from '@Components/Commons/Button';
+
 const DashboardScreen = () => {
+  const inset = useSafeAreaInsets();
   const dispatch = useDispatch<any>();
   return (
-    <View>
+    <View style={[{paddingTop: inset.top}]}>
       <Text>DashboardScreen</Text>
       <Button label="reset" onPress={() => dispatch(resetUser())} />
     </View>

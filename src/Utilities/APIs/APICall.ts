@@ -49,7 +49,7 @@ const APICall = async (endpoint: IEndpoint, options?: IAPIsCallOption) => {
       console.error(
         `=> [X] axios request ${endpoint} error with code: ${errorPayload.code} //message: ${errorPayload.message}`,
       );
-      console.error('=> [X] axios error:', error.toJSON());
+      console.log('=> [X] axios error:', error);
 
       throw errorPayload;
     });

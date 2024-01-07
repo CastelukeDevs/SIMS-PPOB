@@ -1,7 +1,7 @@
 import React from 'react';
 import {Image, StyleSheet, Text, View, ViewStyle} from 'react-native';
 import {ThemeText} from '@Utilities/Styles/GlobalStyles';
-import Assets from '@Assets/Assets';
+import Assets from '@Assets/AssetsManager';
 
 const LogoSize = 32;
 const asset = Assets('Logo-Logo');
