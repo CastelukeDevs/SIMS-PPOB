@@ -6,7 +6,6 @@ import {
 import {IInformationState} from '@Redux/Reducers/InformationReducer';
 import {IAPIResult, ICancelSignal, IEndpoint} from '@Utilities/APIs/APIUtils';
 import APICall from '@Utilities/APIs/APICall';
-import {toast} from '@backpackapp-io/react-native-toast';
 
 const GetBalancePrefix: IEndpoint = 'BUSINESS_BALANCE';
 const GetBannerPrefix: IEndpoint = 'BUSINESS_BANNER';
@@ -119,7 +118,6 @@ export default (builder: ActionReducerMapBuilder<IInformationState>) => {
     .addCase(
       topUpBalance.fulfilled,
       (state, action: PayloadAction<IAPIResult<{balance: number}>>) => {
-        toast.success('Top up berhasil');
         state.status = 'success';
         state.error = null;
         state.balance = action.payload.data.balance;
