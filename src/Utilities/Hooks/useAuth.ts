@@ -4,6 +4,7 @@ import {fetchUser} from '@Redux/Actions/UserAction';
 import {IRootStateType} from '@Redux/Store';
 import {resetUser} from '@Redux/Reducers/UserReducer';
 import {toast} from '@backpackapp-io/react-native-toast';
+import {saveToken} from '@Utilities/Tools/AsyncStorageUtils';
 
 type IAuthHookReturn = {
   auth: boolean;
@@ -26,6 +27,7 @@ export default (): IAuthHookReturn => {
   useEffect(() => {
     //trigger fetch user to verify token validity from server
     if (user.token !== null) {
+      saveToken(user.token);
       dispatch(fetchUser());
     }
   }, [user.token]);

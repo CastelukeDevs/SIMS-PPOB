@@ -14,21 +14,16 @@ const GetUserPrefix: IEndpoint = 'USER_PROFILE';
 const AuthSignInPrefix: IEndpoint = 'AUTH_LOGIN';
 const AuthSignUpPrefix: IEndpoint = 'AUTH_REGISTER';
 
-export const fetchUser = createAsyncThunk<
-  IAPIResult,
-  ICancelSignal | undefined,
-  {state: IRootStateType}
->(GetUserPrefix, async (props, {getState}) => {
-  const {user} = getState();
-  console.log('state', user.token);
+export const fetchUser = createAsyncThunk(
+  GetUserPrefix,
+  async (props?: ICancelSignal) => {
+    const data = await APICall(GetUserPrefix, {
+      abortController: props?.abortController,
+    });
 
-  const data = await APICall(GetUserPrefix, {
-    abortController: props?.abortController,
-    token: user.token!,
-  });
-
-  return data;
-});
+    return data;
+  },
+);
 
 export const authSignUpUser = createAsyncThunk(
   AuthSignUpPrefix,
