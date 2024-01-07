@@ -1,5 +1,5 @@
+import {IInformationState} from '@Redux/Reducers/InformationReducer';
 import {ActionReducerMapBuilder} from '@reduxjs/toolkit';
-import {IDefaultState} from '../Reducers/DefaultReducer';
 
 // const GetContactPrefix: IEndpoint = 'GET_USER';
 
@@ -9,7 +9,7 @@ import {IDefaultState} from '../Reducers/DefaultReducer';
 //   return result;
 // });
 
-export default (builder: ActionReducerMapBuilder<IDefaultState>) => {
+export default (builder: ActionReducerMapBuilder<IInformationState>) => {
   // builder
   //   .addCase(fetchUser.pending, state => {
   //     state.error = null;

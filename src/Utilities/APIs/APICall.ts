@@ -13,16 +13,14 @@ const APICall = async (endpoint: IEndpoint, options?: IAPIsCallOption) => {
   axios.defaults.baseURL = BASE_URL;
 
   const selectEndpoint = getEndpoint(endpoint)!;
-
   const token = await retrieveToken();
-
-  console.log('TOKEEEN', token);
 
   const requestHeader = selectEndpoint.auth
     ? {Authorization: `Bearer ${token}`}
     : {};
 
   const payloadForm = TransformObjectToForm(options?.data);
+
   console.log(`=> New API Call ${endpoint} with detail:`, {
     options,
     payloadData: payloadForm,

@@ -8,3 +8,7 @@ export type IUserMain = {
   first_name: string;
   last_name: string;
 };
+
+export type IUser = {
+  profile_image: string | undefined;
+} & IUserMain;
