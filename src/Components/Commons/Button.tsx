@@ -16,6 +16,7 @@ type IButtonPropTypes = {
   labelStyle?: TextStyle;
   mode?: 'contained' | 'text';
   icon?: IIconProps;
+  disabled?: boolean;
 };
 
 //TODO: add disable button function
@@ -31,11 +32,13 @@ const Button = (props: IButtonPropTypes) => {
 
   return (
     <TouchableOpacity
+      disabled={props.disabled}
       onPress={() => props.onPress()}
       style={[
         styles.RootComponentContainer,
         currentMode === 'contained' && styles.ModeContained,
         props.style,
+        props.disabled && styles.Disabled,
       ]}>
       {props.icon && (
         <Icon
@@ -75,4 +78,8 @@ const styles = StyleSheet.create({
     borderRadius: Dimens.radius,
   },
   LabelText: {textAlign: 'center', marginHorizontal: 12},
+  Disabled: {
+    backgroundColor: Color.dark,
+    opacity: 0.5,
+  },
 });
