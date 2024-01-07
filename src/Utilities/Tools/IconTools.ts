@@ -23,4 +23,5 @@ enum IconList {
   'card',
   'desktop',
   'rocket',
+  'person',
 }

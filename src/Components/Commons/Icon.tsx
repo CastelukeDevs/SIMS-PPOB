@@ -1,18 +1,16 @@
-import React from 'react';
+import {IIconMode, IIconName, getIconName} from '@Utilities/Tools/IconTools';
+import React, {forwardRef} from 'react';
+import {TextStyle} from 'react-native';
 import IonIcon from 'react-native-vector-icons/Ionicons';
-import {
-  IIconMode,
-  IIconName,
-  getIconName,
-} from '../../Utilities/Tools/IconTools';
 
-type IIconProps = {
+export type IIconProps = {
   name?: IIconName;
   size?: number;
   color?: string;
   mode?: IIconMode;
   disabled?: boolean;
   onPress?: () => void;
+  style?: TextStyle;
 };
 
 /**
@@ -29,21 +27,22 @@ type IIconProps = {
  * @default "outline"
  * @returns
  */
-const Icon = (props: IIconProps) => {
+const Icon = forwardRef<IonIcon, IIconProps>((props, ref) => {
   const {name = 'home', size = 24, mode = 'outline'} = props; //default value
 
   const iconName = getIconName(name, mode);
-  console.log('icon name', iconName);
 
   return (
     <IonIcon
+      ref={ref}
       name={iconName}
       size={size}
       color={props.color}
       disabled={typeof props.onPress === 'undefined' || props.disabled}
       onPress={props.onPress}
+      style={props.style}
     />
   );
-};
+});
 
 export default Icon;
