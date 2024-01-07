@@ -29,11 +29,13 @@ const APICall = async (endpoint: IEndpoint, options?: IAPIsCallOption) => {
     data: options?.form ? payloadForm : options?.data,
     params: options?.params,
     signal: options?.abortController?.signal,
-    headers: {
-      'Content-Type': options?.form
-        ? 'multipart/form-data'
-        : 'application/json',
-    },
+    headers: options?.form
+      ? {
+          'Content-Type': 'multipart/form-data',
+        }
+      : {
+          'Content-Type': 'application/json',
+        },
   })
     .then((result: AxiosResponse<IAPIResult>) => {
       console.log(`=> [O] axios request ${endpoint} success`, result);
