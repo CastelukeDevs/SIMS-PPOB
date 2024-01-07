@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 import {Color, Dimens, ThemeText} from '@Utilities/Styles/GlobalStyles';
 
@@ -10,6 +10,7 @@ import {IRootStateType} from '@Redux/Store';
 import TextInput from '@Components/Commons/TextInput';
 import FormatCurrency from '@Utilities/Tools/FormatCurrency';
 import Button from '@Components/Commons/Button';
+import {topUpBalance} from '@Redux/Actions/InformationAction';
 
 const nominalList = [
   [{nominal: 10_000}, {nominal: 20_000}, {nominal: 50_000}],
@@ -17,8 +18,9 @@ const nominalList = [
 ];
 
 const TopUpScreen = () => {
-  const userBalance = useSelector(
-    (state: IRootStateType) => state.information.balance,
+  const dispatch = useDispatch<any>();
+  const businessInfo = useSelector(
+    (state: IRootStateType) => state.information,
   );
 
   const [amount, setAmount] = useState('');
@@ -31,13 +33,15 @@ const TopUpScreen = () => {
     setAmount(amountNumber.toFixed(2).toString());
   };
 
-  const onTopUpPressHandler = () => {};
+  const onTopUpPressHandler = () => {
+    dispatch(topUpBalance({top_up_amount: +amount}));
+  };
 
   return (
     <>
       <Header label="Top Up" />
       <View style={styles.RootScreenContainer}>
-        <BalanceCard balance={userBalance} isSimple />
+        <BalanceCard balance={businessInfo.balance} isSimple />
         <View>
           <Text style={ThemeText.H3_Regular}>Silahkan Masukkan</Text>
           <Text style={ThemeText.H2_Bold}>nominal Top Up</Text>
@@ -56,7 +60,7 @@ const TopUpScreen = () => {
         <Button
           label="Top Up"
           onPress={onTopUpPressHandler}
-          disabled={emptyCase}
+          disabled={emptyCase || businessInfo.status === 'fetching'}
         />
       </View>
     </>
