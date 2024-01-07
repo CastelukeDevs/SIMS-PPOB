@@ -19,6 +19,7 @@ import Icon from '@Components/Commons/Icon';
 import {IIconName} from '@Utilities/Tools/IconTools';
 import TopUpConfirmationModal from '@Screens/Modal/TopUpConfirmationModal';
 import TopUpSuccessModal from '@Screens/Modal/TopUpSuccessModal';
+import TopUpFailedModal from '@Screens/Modal/TopUpFailedModal';
 
 const Stack = createStackNavigator<IRootNav>();
 const Tab = createBottomTabNavigator<IDashboardTabNav>();
@@ -48,6 +49,7 @@ const RootRoute = () => {
             name="topUpSuccessModal"
             component={TopUpSuccessModal}
           />
+          <Stack.Screen name="topUpFailedModal" component={TopUpFailedModal} />
         </Stack.Group>
       </Stack.Navigator>
       <Toasts />

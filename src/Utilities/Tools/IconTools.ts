@@ -25,4 +25,5 @@ enum IconList {
   'rocket',
   'person',
   'checkmark',
+  'close',
 }

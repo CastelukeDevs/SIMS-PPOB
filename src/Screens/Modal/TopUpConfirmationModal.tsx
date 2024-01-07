@@ -33,8 +33,6 @@ const TopUpConfirmationModal = ({
   const amount = route.params.amount;
   const amountFormat = FormatCurrency(amount);
 
-  console.log('amountFormat', amountFormat);
-
   const onCloseHandler = () => {
     navigation.goBack();
   };
@@ -45,6 +43,9 @@ const TopUpConfirmationModal = ({
       .unwrap()
       .then(() => {
         navigation.navigate('topUpSuccessModal', {amount});
+      })
+      .catch(() => {
+        navigation.navigate('topUpFailedModal', {amount});
       });
   };
 

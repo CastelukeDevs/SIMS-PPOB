@@ -14,6 +14,7 @@ export type IRootNav = {
 
   topUpConfirmationModal: {amount: number};
   topUpSuccessModal: {amount: number};
+  topUpFailedModal: {amount: number};
 };
 
 export type IDashboardTabNav = {
