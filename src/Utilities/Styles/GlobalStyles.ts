@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import {Dimensions, StyleSheet} from 'react-native';
 
 export const Dimens = {
   padding: 18,
@@ -117,6 +117,7 @@ export const Color = {
   inactive: '#000000' + Opacity[50],
   accent: '#E3362B',
   error: '#ff6347',
+  success: '#66cdaa',
 } as const;
 /**
  * #4361EE
@@ -125,14 +126,20 @@ export const Color = {
  */
 
 export const DefaultStyle = StyleSheet.create({
-  Base: {flex: 1},
-  LogoArea: {flex: 1, justifyContent: 'center'},
-  CenterArea: {flex: 2, justifyContent: 'space-between'},
-  StripeLine: {
-    height: 2,
-    width: 200,
-    backgroundColor: Color.light,
+  ModalRootStyle: {
+    backgroundColor: Color.dark + Opacity[30],
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
+  ModalViewStyle: {
+    backgroundColor: Color.light,
+    borderRadius: Dimens.padding,
+    padding: Dimens.padding,
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+  },
+  ModalIconStyle: {width: 60, height: 60},
 });
 
 export const ThemeText = StyleSheet.create({

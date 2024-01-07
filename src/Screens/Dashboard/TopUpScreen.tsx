@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
 
+import {ITabNavProp} from '@Routes/RouteTypes';
 import {Color, Dimens, ThemeText} from '@Utilities/Styles/GlobalStyles';
 
 import Header from '@Components/Commons/Header';
@@ -10,18 +11,16 @@ import {IRootStateType} from '@Redux/Store';
 import TextInput from '@Components/Commons/TextInput';
 import FormatCurrency from '@Utilities/Tools/FormatCurrency';
 import Button from '@Components/Commons/Button';
-import {topUpBalance} from '@Redux/Actions/InformationAction';
 
 const nominalList = [
   [{nominal: 10_000}, {nominal: 20_000}, {nominal: 50_000}],
   [{nominal: 100_000}, {nominal: 250_000}, {nominal: 500_000}],
 ];
 
-const TopUpScreen = () => {
-  const dispatch = useDispatch<any>();
-  const businessInfo = useSelector(
+const TopUpScreen = ({navigation}: ITabNavProp<'topUpScreen'>) => {
+  const balance = useSelector(
     (state: IRootStateType) => state.information,
-  );
+  ).balance;
 
   const [amount, setAmount] = useState('');
 
@@ -34,14 +33,15 @@ const TopUpScreen = () => {
   };
 
   const onTopUpPressHandler = () => {
-    dispatch(topUpBalance({top_up_amount: +amount}));
+    // dispatch(topUpBalance({top_up_amount: +amount}));
+    navigation.navigate('topUpConfirmationModal', {amount: +amount});
   };
 
   return (
     <>
       <Header label="Top Up" />
       <View style={styles.RootScreenContainer}>
-        <BalanceCard balance={businessInfo.balance} isSimple />
+        <BalanceCard balance={balance} isSimple />
         <View>
           <Text style={ThemeText.H3_Regular}>Silahkan Masukkan</Text>
           <Text style={ThemeText.H2_Bold}>nominal Top Up</Text>
@@ -60,7 +60,7 @@ const TopUpScreen = () => {
         <Button
           label="Top Up"
           onPress={onTopUpPressHandler}
-          disabled={emptyCase || businessInfo.status === 'fetching'}
+          disabled={emptyCase}
         />
       </View>
     </>
