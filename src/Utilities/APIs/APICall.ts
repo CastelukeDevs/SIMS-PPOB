@@ -1,4 +1,4 @@
-import axios, {AxiosError} from 'axios';
+import axios, {AxiosError, AxiosResponse} from 'axios';
 import {
   IAPIResult,
   IAPIsCallOption,
@@ -13,25 +13,28 @@ const APICall = async (endpoint: IEndpoint, options?: IAPIsCallOption) => {
 
   const selectEndpoint = getEndpoint(endpoint)!;
 
-  // const requestHeader = selectEndpoint.auth
-  //   ? {Authorization: `Bearer ${token}`}
-  //   : {};
+  const requestHeader = selectEndpoint.auth
+    ? {Authorization: `Bearer ${options?.token}`}
+    : {};
 
-  const payloadData = TransformObjectToForm(options?.data);
+  const payloadForm = TransformObjectToForm(options?.data);
   console.log(`=> New API Call ${endpoint} with detail:`, {
     options,
-    payloadData,
+    payloadData: payloadForm,
   });
 
   return await axios({
     method: selectEndpoint.method,
     url: selectEndpoint.url,
-    data: payloadData,
+    data: options?.form ? payloadForm : options?.data,
     params: options?.params,
     signal: options?.abortController?.signal,
-    headers: {'Content-Type': 'multipart/form-data'},
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: requestHeader.Authorization || '',
+    },
   })
-    .then(result => {
+    .then((result: AxiosResponse<IAPIResult>) => {
       console.log(`=> [O] axios request ${endpoint} success`, result);
 
       return result.data;
@@ -39,13 +42,14 @@ const APICall = async (endpoint: IEndpoint, options?: IAPIsCallOption) => {
     .catch((error: AxiosError<IAPIResult>) => {
       const errorPayload = {
         message: error.response?.data?.message || error.message,
-        code: `${error.response?.status}`,
-        response: error.response,
+        code: `${error.response?.data.status}`,
+        status: error.response?.data.status,
+        response: error.response?.data || error.response,
       };
       console.error(
         `=> [X] axios request ${endpoint} error with code: ${errorPayload.code} //message: ${errorPayload.message}`,
       );
-      console.error('=> [X] axios error:', error);
+      console.error('=> [X] axios error:', error.toJSON());
 
       throw errorPayload;
     });
