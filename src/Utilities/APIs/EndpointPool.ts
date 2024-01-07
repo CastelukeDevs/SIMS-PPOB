@@ -38,6 +38,42 @@ const EndpointPool = [
     method: 'put',
     auth: true,
   },
+  {
+    endpoint: 'BUSINESS_BANNER',
+    url: '/banner',
+    method: 'get',
+    auth: true,
+  },
+  {
+    endpoint: 'BUSINESS_SERVICES',
+    url: '/services',
+    method: 'get',
+    auth: true,
+  },
+  {
+    endpoint: 'BUSINESS_BALANCE',
+    url: '/balance',
+    method: 'get',
+    auth: true,
+  },
+  {
+    endpoint: 'BUSINESS_TOP_UP',
+    url: '/topup',
+    method: 'post',
+    auth: true,
+  },
+  {
+    endpoint: 'CREATE_TRANSACTION',
+    url: '/transaction',
+    method: 'post',
+    auth: true,
+  },
+  {
+    endpoint: 'GET_TRANSACTION',
+    url: '/transaction/history',
+    method: 'get',
+    auth: true,
+  },
 ] as const satisfies IEndpointPool[];
 
 export default EndpointPool;

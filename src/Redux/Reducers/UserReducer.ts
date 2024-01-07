@@ -1,10 +1,11 @@
 import UserAction from '@Redux/Actions/UserAction';
 import {createSlice} from '@reduxjs/toolkit';
 import {IStatusState} from '@Types/CommonTypes';
-import {IUserMain} from '@Types/UserTypes';
+import {IUser} from '@Types/UserTypes';
+import {forgetToken} from '@Utilities/Tools/AsyncStorageUtils';
 
 export type IUserState = {
-  userData: IUserMain | null;
+  userData: IUser | null;
   token: string | null;
 } & IStatusState;
 
@@ -20,6 +21,7 @@ const DefaultReducer = createSlice({
   initialState: userInitialState,
   reducers: {
     resetUser: () => {
+      forgetToken();
       return {...userInitialState};
     },
   },

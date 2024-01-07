@@ -4,10 +4,14 @@ import {StyleSheet, Text, View} from 'react-native';
 import Icon from './Commons/Icon';
 import FormatCurrency from '@Utilities/Tools/FormatCurrency';
 
-const secureString = (str: string) => str.replace(/./g, '•');
+const secureString = (str: string) =>
+  str.replace('.', '').replace(',', '').replace(/./g, '•');
 
-const BalanceCard = () => {
-  const balance = 10000;
+type IBalanceCardProps = {
+  balance: number;
+};
+const BalanceCard = (props: IBalanceCardProps) => {
+  const balance = props.balance;
   const format = FormatCurrency(balance);
   const symbol = format.symbol;
 

@@ -7,20 +7,24 @@ import {
   getEndpoint,
 } from './APIUtils';
 import {BASE_URL} from './EndpointPool';
+import {retrieveToken} from '@Utilities/Tools/AsyncStorageUtils';
 
 const APICall = async (endpoint: IEndpoint, options?: IAPIsCallOption) => {
   axios.defaults.baseURL = BASE_URL;
 
   const selectEndpoint = getEndpoint(endpoint)!;
+  const token = await retrieveToken();
 
   const requestHeader = selectEndpoint.auth
-    ? {Authorization: `Bearer ${options?.token}`}
+    ? {Authorization: `Bearer ${token}`}
     : {};
 
   const payloadForm = TransformObjectToForm(options?.data);
+
   console.log(`=> New API Call ${endpoint} with detail:`, {
     options,
     payloadData: payloadForm,
+    requestHeader,
   });
 
   return await axios({
@@ -30,8 +34,8 @@ const APICall = async (endpoint: IEndpoint, options?: IAPIsCallOption) => {
     params: options?.params,
     signal: options?.abortController?.signal,
     headers: {
+      ...requestHeader,
       'Content-Type': 'application/json',
-      Authorization: requestHeader.Authorization || '',
     },
   })
     .then((result: AxiosResponse<IAPIResult>) => {
@@ -46,7 +50,7 @@ const APICall = async (endpoint: IEndpoint, options?: IAPIsCallOption) => {
         status: error.response?.data.status,
         response: error.response?.data || error.response,
       };
-      console.error(
+      console.log(
         `=> [X] axios request ${endpoint} error with code: ${errorPayload.code} //message: ${errorPayload.message}`,
       );
       console.log('=> [X] axios error:', error);

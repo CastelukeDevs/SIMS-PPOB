@@ -7,28 +7,24 @@ import {IUserState} from '@Redux/Reducers/UserReducer';
 
 import APICall from '@Utilities/APIs/APICall';
 import {IAPIResult, ICancelSignal, IEndpoint} from '@Utilities/APIs/APIUtils';
-import {IUserAuth, IUserMain} from '@Types/UserTypes';
+import {IUser, IUserAuth, IUserMain} from '@Types/UserTypes';
 import {IRootStateType} from '@Redux/Store';
+import ImagePathSanityCheck from '@Utilities/Tools/ImagePathSanityCheck';
 
 const GetUserPrefix: IEndpoint = 'USER_PROFILE';
 const AuthSignInPrefix: IEndpoint = 'AUTH_LOGIN';
 const AuthSignUpPrefix: IEndpoint = 'AUTH_REGISTER';
 
-export const fetchUser = createAsyncThunk<
-  IAPIResult,
-  ICancelSignal | undefined,
-  {state: IRootStateType}
->(GetUserPrefix, async (props, {getState}) => {
-  const {user} = getState();
-  console.log('state', user.token);
+export const fetchUser = createAsyncThunk(
+  GetUserPrefix,
+  async (props?: ICancelSignal) => {
+    const data = await APICall(GetUserPrefix, {
+      abortController: props?.abortController,
+    });
 
-  const data = await APICall(GetUserPrefix, {
-    abortController: props?.abortController,
-    token: user.token!,
-  });
-
-  return data;
-});
+    return data;
+  },
+);
 
 export const authSignUpUser = createAsyncThunk(
   AuthSignUpPrefix,
@@ -65,9 +61,16 @@ export default (builder: ActionReducerMapBuilder<IUserState>) => {
       state.error = {message: action.error.message!, error: action.error};
     })
     .addCase(fetchUser.fulfilled, (state, action) => {
+      const data: IUser = action.payload.data;
+      const imagePath = ImagePathSanityCheck(data.profile_image);
+      data.profile_image = imagePath;
+      console.log('newData', data);
+
+      //   data.profile_image = data.profile_image;
+
       state.status = 'success';
       state.error = null;
-      state.userData = action.payload.data;
+      state.userData = data;
       //   state.userData = action.payload;
     })
     .addCase(authSignUpUser.pending, state => {
