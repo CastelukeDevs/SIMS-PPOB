@@ -33,7 +33,9 @@ const RootRoute = () => {
   const {auth} = useAuth();
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Navigator
+        screenOptions={{headerShown: false}}
+        initialRouteName={!auth ? 'authSignInScreen' : 'dashboardRoute'}>
         {/* <Stack.Screen name="splashScreen" component={SplashScreen} /> */}
         {!auth ? (
           <>
@@ -76,7 +78,9 @@ const tabBarIcon = (name: IIconName, props: ITabBarIconProps) => {
 
 const DashboardRoute = () => {
   return (
-    <Tab.Navigator screenOptions={{headerShown: false}}>
+    <Tab.Navigator
+      screenOptions={{headerShown: false}}
+      initialRouteName="homeScreen">
       <Tab.Screen
         name="homeScreen"
         component={DashboardScreen}
