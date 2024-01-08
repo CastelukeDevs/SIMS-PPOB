@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
 
 import {IMainNavProp} from '@Routes/RouteTypes';
@@ -9,6 +9,9 @@ import Button from '@Components/Commons/Button';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import TextInput from '@Components/Commons/TextInput';
 import FormatCurrency from '@Utilities/Tools/FormatCurrency';
+import {IRootStateType} from '@Redux/Store';
+import {useSelector} from 'react-redux';
+import {toast} from '@backpackapp-io/react-native-toast';
 
 const CreateTransactionScreen = ({
   navigation,
@@ -17,20 +20,23 @@ const CreateTransactionScreen = ({
   const inset = useSafeAreaInsets();
   const service = route.params.service;
 
+  const balance = useSelector(
+    (state: IRootStateType) => state.information,
+  ).balance;
   const price = FormatCurrency(+service.service_tariff).format;
 
-  const onBackPressHandler = () => {
-    navigation.goBack();
-  };
   const onPayPressHandler = () => {
+    if (balance < service.service_tariff) {
+      return toast.error('Saldo anda kurang dari harga transaksi');
+    }
     navigation.navigate('confirmationModal', {mode: 'PAYMENT', data: service});
   };
   return (
     <>
-      <Header label="Pembayaran" onBackPress={onBackPressHandler} />
+      <Header label="Pembayaran" />
       <View
         style={[
-          {paddingBottom: inset.bottom + Dimens.padding},
+          {paddingBottom: inset.bottom + Dimens.padding, paddingTop: 12},
           styles.RootScreenContainer,
         ]}>
         <View style={styles.PaddedContainer}>

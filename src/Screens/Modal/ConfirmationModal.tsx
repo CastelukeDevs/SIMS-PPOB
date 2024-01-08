@@ -46,14 +46,20 @@ const ConfirmationModal = ({
 
     try {
       if (isTopUp) {
-        dispatch(topUpBalance({top_up_amount: +amount})).unwrap();
+        dispatch(topUpBalance({top_up_amount: +amount}))
+          .unwrap()
+          .then(() => {
+            navigation.navigate('successModal', {...payload});
+          });
       } else {
         dispatch(
           createNewTransaction({service_code: payload.data.service_code!}),
-        ).unwrap();
+        )
+          .unwrap()
+          .then(() => {
+            navigation.navigate('successModal', {...payload});
+          });
       }
-
-      navigation.navigate('successModal', {...payload});
     } catch (_) {
       navigation.navigate('failedModal', {...payload});
     }

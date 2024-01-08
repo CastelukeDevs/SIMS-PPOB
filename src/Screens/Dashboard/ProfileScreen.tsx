@@ -62,7 +62,6 @@ const ProfileScreen = () => {
   const onEditPress = () => {
     if (!editable) return setEditable(true);
     if (!checkFormValidity()) return;
-    setEditable(false);
 
     const dataset = {
       email,
@@ -74,6 +73,7 @@ const ProfileScreen = () => {
       .unwrap()
       .then(() => {
         toast.success('Berhasil menyimpan profil akun');
+        setEditable(false);
       })
       .catch(() => {
         toast.error('Gagal menyimpan profil akun');
@@ -147,6 +147,7 @@ export default ProfileScreen;
 const styles = StyleSheet.create({
   RootScreenContainer: {
     flex: 1,
+    marginTop: 18,
   },
   UserNameText: {
     textAlign: 'center',

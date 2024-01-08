@@ -49,16 +49,16 @@ const RootRoute = () => {
               name="createTransactionScreen"
               component={CreateTransactionScreen}
             />
+            <Stack.Group screenOptions={{presentation: 'transparentModal'}}>
+              <Stack.Screen
+                name="confirmationModal"
+                component={ConfirmationModal}
+              />
+              <Stack.Screen name="successModal" component={SuccessModal} />
+              <Stack.Screen name="failedModal" component={TopUpFailedModal} />
+            </Stack.Group>
           </>
         )}
-        <Stack.Group screenOptions={{presentation: 'transparentModal'}}>
-          <Stack.Screen
-            name="confirmationModal"
-            component={ConfirmationModal}
-          />
-          <Stack.Screen name="successModal" component={SuccessModal} />
-          <Stack.Screen name="failedModal" component={TopUpFailedModal} />
-        </Stack.Group>
       </Stack.Navigator>
       <Toasts />
     </NavigationContainer>
