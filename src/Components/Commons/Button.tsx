@@ -15,7 +15,7 @@ type IButtonPropTypes = {
   onPress: () => void;
   style?: ViewStyle;
   labelStyle?: TextStyle;
-  mode?: 'contained' | 'text';
+  mode?: 'contained' | 'text' | 'outlined';
   icon?: IIconProps;
   disabled?: boolean;
   onLayout?: (event: LayoutChangeEvent) => void;
@@ -40,6 +40,7 @@ const Button = (props: IButtonPropTypes) => {
       style={[
         styles.RootComponentContainer,
         currentMode === 'contained' && styles.ModeContained,
+        currentMode === 'outlined' && styles.ModeOutlined,
         props.style,
         props.disabled && styles.Disabled,
       ]}>
@@ -78,6 +79,11 @@ const styles = StyleSheet.create({
   },
   ModeContained: {
     backgroundColor: Color.accent,
+    borderRadius: Dimens.radius,
+  },
+  ModeOutlined: {
+    borderWidth: 1,
+    borderColor: Color.accent,
     borderRadius: Dimens.radius,
   },
   LabelText: {textAlign: 'center', marginHorizontal: 8},

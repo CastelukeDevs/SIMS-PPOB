@@ -12,10 +12,7 @@ import BalanceCard from '@Components/BalanceCard';
 import Header from '@Components/Commons/Header';
 import ItemSeparator from '@Components/Commons/ItemSeparator';
 import TransactionCard from '@Components/TransactionCard';
-import {
-  resetOffset,
-  resetTransaction,
-} from '@Redux/Reducers/TransactionReducer';
+import {resetTransaction} from '@Redux/Reducers/TransactionReducer';
 import {toast} from '@backpackapp-io/react-native-toast';
 
 const TransactionsScreen = ({navigation}: ITabNavProp<'transactionScreen'>) => {
