@@ -65,10 +65,16 @@ export const editUserProfile = createAsyncThunk(
 
 export const editUserImage = createAsyncThunk(
   EditUserImagePrefix,
-  async (props: {profile_image: any} & ICancelSignal) => {
+  async (props: {file: {uri: string}} & ICancelSignal) => {
+    const assets = {
+      uri: props.file.uri,
+      type: 'image/jpeg',
+      name: 'avatar.jpeg',
+    };
+
     const data = await APICall(EditUserImagePrefix, {
       abortController: props?.abortController,
-      data: {profile_image: props.profile_image},
+      data: {file: assets},
       form: true,
     });
 

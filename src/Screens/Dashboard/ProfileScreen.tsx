@@ -1,27 +1,20 @@
 import React, {useState} from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
-import {resetUser} from '@Redux/Reducers/UserReducer';
+import {toast} from '@backpackapp-io/react-native-toast';
+import {IRootStateType} from '@Redux/Store';
+import {logoutUser} from '@Redux/Actions/DefaultAction';
+import {editUserImage, editUserProfile} from '@Redux/Actions/UserAction';
+import ImagePicker from '@Utilities/Tools/ImagePicker';
+
+import {Dimens, ThemeText} from '@Utilities/Styles/GlobalStyles';
+import ValidateString from '@Utilities/Tools/ValidateString';
 
 import Button from '@Components/Commons/Button';
 import Header from '@Components/Commons/Header';
-import {
-  Color,
-  Dimens,
-  Opacity,
-  ThemeText,
-} from '@Utilities/Styles/GlobalStyles';
-import {IRootStateType} from '@Redux/Store';
-import AssetsManager from '@Assets/AssetsManager';
-import Icon from '@Components/Commons/Icon';
-import Avatar from '@Components/Avatar';
 import TextInput from '@Components/Commons/TextInput';
-import ValidateString from '@Utilities/Tools/ValidateString';
-import {logoutUser} from '@Redux/Actions/DefaultAction';
-import {editUserProfile} from '@Redux/Actions/UserAction';
-import {toast} from '@backpackapp-io/react-native-toast';
+import Avatar from '@Components/Avatar';
 
-const avatarAssets = AssetsManager('Profile-L');
 const ProfileScreen = () => {
   const dispatch = useDispatch<any>();
   const {userData} = useSelector((state: IRootStateType) => state.user);
@@ -54,7 +47,17 @@ const ProfileScreen = () => {
     );
   };
 
-  const onAvatarEditPressHandler = () => {};
+  const onAvatarEditPressHandler = async () => {
+    const asset = await ImagePicker();
+    dispatch(editUserImage({file: asset as any}))
+      .unwrap()
+      .then(() => {
+        toast.success('Berhasil menyimpan foto profil');
+      })
+      .catch(() => {
+        toast.error('Gagal menyimpan foto profil');
+      });
+  };
 
   const onEditPress = () => {
     if (!editable) return setEditable(true);
@@ -77,7 +80,7 @@ const ProfileScreen = () => {
       });
   };
 
-  const onLogoutPress = () => {
+  const onLogoutPress = async () => {
     dispatch(logoutUser());
   };
 
@@ -122,6 +125,7 @@ const ProfileScreen = () => {
             editable={editable}
             errorMessage={formError.lastName}
           />
+          <View style={{flex: 1}} />
           <Button
             label={editable ? 'Simpan' : 'Edit Profil'}
             onPress={onEditPress}
@@ -150,12 +154,10 @@ const styles = StyleSheet.create({
   },
   ContentContainer: {
     flex: 1,
-    padding: Dimens.padding,
-    justifyContent: 'space-between',
-    // backgroundColor: 'gold',
+    paddingHorizontal: Dimens.padding,
   },
   LastButton: {
-    marginBottom: 24,
-    marginTop: 12,
+    marginBottom: 18,
+    marginTop: 24,
   },
 });
