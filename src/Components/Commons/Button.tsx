@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  LayoutChangeEvent,
   StyleSheet,
   Text,
   TextStyle,
@@ -17,6 +18,7 @@ type IButtonPropTypes = {
   mode?: 'contained' | 'text';
   icon?: IIconProps;
   disabled?: boolean;
+  onLayout?: (event: LayoutChangeEvent) => void;
 };
 
 //TODO: add disable button function
@@ -33,7 +35,8 @@ const Button = (props: IButtonPropTypes) => {
   return (
     <TouchableOpacity
       disabled={props.disabled}
-      onPress={() => props.onPress()}
+      onPress={props.onPress}
+      onLayout={props.onLayout}
       style={[
         styles.RootComponentContainer,
         currentMode === 'contained' && styles.ModeContained,
@@ -67,7 +70,7 @@ export default Button;
 
 const styles = StyleSheet.create({
   RootComponentContainer: {
-    paddingHorizontal: 12,
+    paddingHorizontal: 6,
     paddingVertical: 16,
     flexDirection: 'row',
     justifyContent: 'center',
@@ -77,7 +80,7 @@ const styles = StyleSheet.create({
     backgroundColor: Color.accent,
     borderRadius: Dimens.radius,
   },
-  LabelText: {textAlign: 'center', marginHorizontal: 12},
+  LabelText: {textAlign: 'center', marginHorizontal: 8},
   Disabled: {
     backgroundColor: Color.dark,
     opacity: 0.5,

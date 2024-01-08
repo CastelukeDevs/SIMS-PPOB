@@ -1,3 +1,5 @@
+import {IServices} from '@Types/BusinessInfoTypes';
+import {ITransactionType} from '@Types/TransactionTypes';
 import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
 import {
   CompositeScreenProps,
@@ -5,16 +7,21 @@ import {
 } from '@react-navigation/native';
 import {StackScreenProps} from '@react-navigation/stack';
 
+type IModalPayload = {
+  mode: ITransactionType;
+  data: {amount?: number} & Partial<IServices>;
+};
 export type IRootNav = {
   splashScreen: undefined;
   authSignInScreen: undefined;
   authSignUpScreen: undefined;
   profileScreen: undefined;
+  createTransactionScreen: {service: IServices};
   dashboardRoute: NavigatorScreenParams<IDashboardTabNav>;
 
-  topUpConfirmationModal: {amount: number};
-  topUpSuccessModal: {amount: number};
-  topUpFailedModal: {amount: number};
+  confirmationModal: IModalPayload;
+  successModal: IModalPayload;
+  failedModal: IModalPayload;
 };
 
 export type IDashboardTabNav = {

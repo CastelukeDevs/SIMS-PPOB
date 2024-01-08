@@ -15,38 +15,48 @@ import {
 
 import AssetsManager from '@Assets/AssetsManager';
 import FormatCurrency from '@Utilities/Tools/FormatCurrency';
+import {createNewTransaction} from '@Redux/Actions/TransactionAction';
 
 const asset = AssetsManager('Logo-Logo');
 
-const TopUpConfirmationModal = ({
+const ConfirmationModal = ({
   navigation,
   route,
-}: IMainNavProp<'topUpConfirmationModal'>) => {
+}: IMainNavProp<'confirmationModal'>) => {
+  const payload = route.params;
+  const isTopUp = payload.mode === 'TOPUP';
+  const amount = payload.data.amount || payload.data.service_tariff || 0;
+  const amountFormat = FormatCurrency(amount);
+
   const dispatch = useDispatch<any>();
+  const {width} = useWindowDimensions();
+
   const businessInfo = useSelector(
     (state: IRootStateType) => state.information,
   );
 
-  const {width} = useWindowDimensions();
   const componentSize = width - Dimens.padding * 2;
-
-  const amount = route.params.amount;
-  const amountFormat = FormatCurrency(amount);
 
   const onCloseHandler = () => {
     navigation.goBack();
   };
 
-  const onProceedTopUpHandler = () => {
+  const onProceedTopUpHandler = async () => {
     if (businessInfo.status === 'fetching') return;
-    dispatch(topUpBalance({top_up_amount: +amount}))
-      .unwrap()
-      .then(() => {
-        navigation.navigate('topUpSuccessModal', {amount});
-      })
-      .catch(() => {
-        navigation.navigate('topUpFailedModal', {amount});
-      });
+
+    try {
+      if (isTopUp) {
+        dispatch(topUpBalance({top_up_amount: +amount})).unwrap();
+      } else {
+        dispatch(
+          createNewTransaction({service_code: payload.data.service_code!}),
+        ).unwrap();
+      }
+
+      navigation.navigate('successModal', {...payload});
+    } catch (_) {
+      navigation.navigate('failedModal', {...payload});
+    }
   };
 
   return (
@@ -59,7 +69,8 @@ const TopUpConfirmationModal = ({
         <Image source={asset} style={DefaultStyle.ModalIconStyle} />
         <View>
           <Text style={[ThemeText.Title_Regular, {textAlign: 'center'}]}>
-            Anda yakin untuk Top Up sebesar
+            {isTopUp ? 'Anda yakin untuk Top-Up' : 'Bayar'}{' '}
+            {payload.data.service_name} sebesar
           </Text>
           <Text style={[ThemeText.H2_Bold, {textAlign: 'center'}]}>
             {amountFormat.format} ?
@@ -71,7 +82,7 @@ const TopUpConfirmationModal = ({
             ThemeText.Title_Bold,
             {color: Color.accent, textAlign: 'center'},
           ]}>
-          Ya, lanjutkan Top Up
+          Ya, lanjutkan {isTopUp ? 'Top Up' : 'Pembayaran'}
         </Text>
         <Text
           onPress={onCloseHandler}
@@ -86,6 +97,6 @@ const TopUpConfirmationModal = ({
   );
 };
 
-export default TopUpConfirmationModal;
+export default ConfirmationModal;
 
 const styles = StyleSheet.create({});
