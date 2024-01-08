@@ -16,6 +16,7 @@ import ServicesIcon from '@Components/ServicesIcon';
 import BannerCard from '@Components/BannerCard';
 import {ITabNavProp} from '@Routes/RouteTypes';
 import {IBanner, IServices} from '@Types/BusinessInfoTypes';
+import ItemSeparator from '@Components/Commons/ItemSeparator';
 
 // const profile = AssetsManager('Profile-S');
 
@@ -47,7 +48,9 @@ const DashboardScreen = ({navigation}: ITabNavProp<'homeScreen'>) => {
     navigation.navigate('dashboardRoute', {screen: 'profileScreen'});
   };
 
-  const onServicePressHandler = (service: IServices) => {};
+  const onServicePressHandler = (service: IServices) => {
+    navigation.navigate('createTransactionScreen', {service});
+  };
   const onBannerPressHandler = (banner: IBanner) => {};
 
   return (
@@ -67,7 +70,7 @@ const DashboardScreen = ({navigation}: ITabNavProp<'homeScreen'>) => {
         </Text>
       </View>
       <View style={styles.SectionContainer}>
-        <BalanceCard balance={businessInfo.balance} />
+        <BalanceCard />
       </View>
 
       <FlatList
@@ -81,7 +84,7 @@ const DashboardScreen = ({navigation}: ITabNavProp<'homeScreen'>) => {
         )}
         numColumns={columnNumber}
         columnWrapperStyle={styles.FlatlistColumnStyle}
-        ItemSeparatorComponent={Separator}
+        ItemSeparatorComponent={ItemSeparator}
         style={[styles.FlatlistNormalize, styles.SectionContainer]}
         bounces={false}
       />
@@ -109,24 +112,12 @@ const DashboardScreen = ({navigation}: ITabNavProp<'homeScreen'>) => {
           contentContainerStyle={{
             paddingHorizontal: Dimens.padding,
           }}
-          ItemSeparatorComponent={Separator}
+          ItemSeparatorComponent={ItemSeparator}
           showsHorizontalScrollIndicator={false}
           // bounces={false}
         />
       </View>
     </View>
-  );
-};
-
-const Separator = () => {
-  const componentSize = Dimens.padding / 2;
-  return (
-    <View
-      style={{
-        width: componentSize,
-        height: componentSize * 3,
-      }}
-    />
   );
 };
 

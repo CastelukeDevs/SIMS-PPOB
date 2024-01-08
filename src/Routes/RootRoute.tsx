@@ -8,18 +8,23 @@ import {IDashboardTabNav, IRootNav} from './RouteTypes';
 
 import useAuth from '@Utilities/Hooks/useAuth';
 
+import Icon from '@Components/Commons/Icon';
+import {IIconName} from '@Utilities/Tools/IconTools';
+
 import SignInScreen from '@Screens/Pre-Auth/SignInScreen';
 import SignUpScreen from '@Screens/Pre-Auth/SignUpScreen';
+
+import ConfirmationModal from '@Screens/Modal/ConfirmationModal';
+import SuccessModal from '@Screens/Modal/SuccessModal';
+import TopUpFailedModal from '@Screens/Modal/FailedModal';
+
 import DashboardScreen from '@Screens/Dashboard/DashboardScreen';
-import SplashScreen from '@Screens/SplashScreen';
 import TopUpScreen from '@Screens/Dashboard/TopUpScreen';
 import TransactionsScreen from '@Screens/Dashboard/TransactionsScreen';
 import ProfileScreen from '@Screens/Dashboard/ProfileScreen';
-import Icon from '@Components/Commons/Icon';
-import {IIconName} from '@Utilities/Tools/IconTools';
-import TopUpConfirmationModal from '@Screens/Modal/TopUpConfirmationModal';
-import TopUpSuccessModal from '@Screens/Modal/TopUpSuccessModal';
-import TopUpFailedModal from '@Screens/Modal/TopUpFailedModal';
+
+import SplashScreen from '@Screens/SplashScreen';
+import CreateTransactionScreen from '@Screens/CreateTransactionScreen';
 
 const Stack = createStackNavigator<IRootNav>();
 const Tab = createBottomTabNavigator<IDashboardTabNav>();
@@ -38,18 +43,19 @@ const RootRoute = () => {
         ) : (
           <>
             <Stack.Screen name="dashboardRoute" component={DashboardRoute} />
+            <Stack.Screen
+              name="createTransactionScreen"
+              component={CreateTransactionScreen}
+            />
           </>
         )}
         <Stack.Group screenOptions={{presentation: 'transparentModal'}}>
           <Stack.Screen
-            name="topUpConfirmationModal"
-            component={TopUpConfirmationModal}
+            name="confirmationModal"
+            component={ConfirmationModal}
           />
-          <Stack.Screen
-            name="topUpSuccessModal"
-            component={TopUpSuccessModal}
-          />
-          <Stack.Screen name="topUpFailedModal" component={TopUpFailedModal} />
+          <Stack.Screen name="successModal" component={SuccessModal} />
+          <Stack.Screen name="failedModal" component={TopUpFailedModal} />
         </Stack.Group>
       </Stack.Navigator>
       <Toasts />

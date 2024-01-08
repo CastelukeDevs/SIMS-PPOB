@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image, Text, View, useWindowDimensions} from 'react-native';
+import {Text, View, useWindowDimensions} from 'react-native';
 
 import {
   Color,
@@ -8,16 +8,15 @@ import {
   ThemeText,
 } from '@Utilities/Styles/GlobalStyles';
 
-import AssetsManager from '@Assets/AssetsManager';
 import {IMainNavProp} from '@Routes/RouteTypes';
 import FormatCurrency from '@Utilities/Tools/FormatCurrency';
 import Icon from '@Components/Commons/Icon';
 
-const TopUpSuccessModal = ({
-  navigation,
-  route,
-}: IMainNavProp<'topUpSuccessModal'>) => {
-  const amountFormat = FormatCurrency(route.params.amount);
+const SuccessModal = ({navigation, route}: IMainNavProp<'successModal'>) => {
+  const payload = route.params;
+  const isTopUp = payload.mode === 'TOPUP';
+  const amount = payload.data.amount || payload.data.service_tariff || 0;
+  const amountFormat = FormatCurrency(amount);
 
   const {width} = useWindowDimensions();
   const componentSize = width - Dimens.padding * 2;
@@ -43,7 +42,8 @@ const TopUpSuccessModal = ({
         </View>
         <View>
           <Text style={[ThemeText.Title_Regular, {textAlign: 'center'}]}>
-            Top Up sebesar
+            {isTopUp ? 'Top Up' : 'Pembayaran'} {payload.data.service_name}{' '}
+            sebesar
           </Text>
           <Text
             style={[
@@ -69,4 +69,4 @@ const TopUpSuccessModal = ({
   );
 };
 
-export default TopUpSuccessModal;
+export default SuccessModal;

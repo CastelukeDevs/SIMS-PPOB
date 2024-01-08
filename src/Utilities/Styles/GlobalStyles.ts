@@ -117,12 +117,13 @@ export const Color = {
   inactive: '#000000' + Opacity[50],
   accent: '#E3362B',
   error: '#ff6347',
-  success: '#66cdaa',
+  success: '#3cb371',
 } as const;
 /**
  * #4361EE
  * #70D6FF
  * #4CC9F0
+ * #66cdaa
  */
 
 export const DefaultStyle = StyleSheet.create({

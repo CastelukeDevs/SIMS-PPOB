@@ -26,4 +26,6 @@ enum IconList {
   'person',
   'checkmark',
   'close',
+  'arrow-back',
+  'logo-usd',
 }

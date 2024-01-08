@@ -18,10 +18,6 @@ const nominalList = [
 ];
 
 const TopUpScreen = ({navigation}: ITabNavProp<'topUpScreen'>) => {
-  const balance = useSelector(
-    (state: IRootStateType) => state.information,
-  ).balance;
-
   const [amount, setAmount] = useState('');
 
   const emptyCase = amount.length < 1 || +amount === 0;
@@ -34,14 +30,17 @@ const TopUpScreen = ({navigation}: ITabNavProp<'topUpScreen'>) => {
 
   const onTopUpPressHandler = () => {
     // dispatch(topUpBalance({top_up_amount: +amount}));
-    navigation.navigate('topUpConfirmationModal', {amount: +amount});
+    navigation.navigate('confirmationModal', {
+      mode: 'TOPUP',
+      data: {amount: +amount},
+    });
   };
 
   return (
     <>
       <Header label="Top Up" />
       <View style={styles.RootScreenContainer}>
-        <BalanceCard balance={balance} isSimple />
+        <BalanceCard isSimple />
         <View>
           <Text style={ThemeText.H3_Regular}>Silahkan Masukkan</Text>
           <Text style={ThemeText.H2_Bold}>nominal Top Up</Text>

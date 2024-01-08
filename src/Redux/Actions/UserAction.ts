@@ -8,7 +8,6 @@ import {IUserState} from '@Redux/Reducers/UserReducer';
 import APICall from '@Utilities/APIs/APICall';
 import {IAPIResult, ICancelSignal, IEndpoint} from '@Utilities/APIs/APIUtils';
 import {IUser, IUserAuth, IUserMain} from '@Types/UserTypes';
-import {IRootStateType} from '@Redux/Store';
 import ImagePathSanityCheck from '@Utilities/Tools/ImagePathSanityCheck';
 
 const GetUserPrefix: IEndpoint = 'USER_PROFILE';

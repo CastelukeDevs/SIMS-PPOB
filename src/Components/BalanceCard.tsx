@@ -3,16 +3,20 @@ import React, {useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import Icon from './Commons/Icon';
 import FormatCurrency from '@Utilities/Tools/FormatCurrency';
+import {useSelector} from 'react-redux';
+import {IRootStateType} from '@Redux/Store';
 
 const secureString = (str: string) =>
   str.replace('.', '').replace(',', '').replace(/./g, '•');
 
 type IBalanceCardProps = {
-  balance: number;
   isSimple?: boolean;
 };
 const BalanceCard = (props: IBalanceCardProps) => {
-  const balance = props.balance;
+  const balance = useSelector(
+    (state: IRootStateType) => state.information.balance,
+  );
+  // const balance = props.balance;
   const format = FormatCurrency(balance);
   const symbol = format.symbol;
 
@@ -31,7 +35,9 @@ const BalanceCard = (props: IBalanceCardProps) => {
   return (
     <View style={styles.RootComponentContainer}>
       <Text style={[ThemeText.H3_Regular, styles.TextColor]}>Saldo anda</Text>
-      <Text style={[ThemeText.Hero_Bold, styles.TextColor, styles.TopSpace]}>
+      <Text
+        numberOfLines={1}
+        style={[ThemeText.H1_Bold, styles.TextColor, styles.TopSpace]}>
         <Text style={styles.TextDim}>{symbol + ' '}</Text>
         <Text>{displayBalance}</Text>
         <Text style={(!balanceSecured || props.isSimple) && styles.TextDim}>
