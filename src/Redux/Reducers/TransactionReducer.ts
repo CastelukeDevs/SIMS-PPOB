@@ -7,22 +7,31 @@ export type ITransactionState = {
   transactionList: ITransaction[];
   limit: number;
   offset: number;
+  isMax: boolean;
 } & IStatusState;
 
 export const transactionInitialState: ITransactionState = {
   error: null,
   status: 'idle',
   transactionList: [],
-  limit: 5,
+  limit: 10,
   offset: 0,
+  isMax: false,
 };
 
 const TransactionReducer = createSlice({
   name: 'transaction',
   initialState: transactionInitialState,
-  reducers: {},
+  reducers: {
+    resetTransaction: () => {
+      return {...transactionInitialState};
+    },
+    resetOffset: state => {
+      return {...state, offset: 0};
+    },
+  },
   extraReducers: TransactionAction,
 });
 
-export const {} = TransactionReducer.actions;
+export const {resetTransaction, resetOffset} = TransactionReducer.actions;
 export default TransactionReducer.reducer;

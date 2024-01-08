@@ -1,27 +1,66 @@
+import React, {useEffect, useMemo, useState} from 'react';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
+import {IRootStateType} from '@Redux/Store';
+import {getTransactionList} from '@Redux/Actions/TransactionAction';
+
+import {useIsFocused} from '@react-navigation/native';
+import {ITabNavProp} from '@Routes/RouteTypes';
+
+import {Color, Dimens, ThemeText} from '@Utilities/Styles/GlobalStyles';
 import BalanceCard from '@Components/BalanceCard';
 import Header from '@Components/Commons/Header';
 import ItemSeparator from '@Components/Commons/ItemSeparator';
 import TransactionCard from '@Components/TransactionCard';
-import {getTransactionList} from '@Redux/Actions/TransactionAction';
-import {IRootStateType} from '@Redux/Store';
-import {Color, Dimens, ThemeText} from '@Utilities/Styles/GlobalStyles';
-import React, {useEffect, useMemo} from 'react';
-import {FlatList, StyleSheet, Text, View} from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
+import {
+  resetOffset,
+  resetTransaction,
+} from '@Redux/Reducers/TransactionReducer';
+import {toast} from '@backpackapp-io/react-native-toast';
 
-const TransactionsScreen = () => {
+const TransactionsScreen = ({navigation}: ITabNavProp<'transactionScreen'>) => {
   const dispatch = useDispatch<any>();
+  const isFocused = useIsFocused();
 
   const transaction = useSelector((state: IRootStateType) => state.transaction);
+
+  const [isError, setIsError] = useState(false);
 
   const transactionList = useMemo(
     () => transaction.transactionList,
     [transaction.transactionList],
   );
 
+  const getNextTransaction = () => {
+    dispatch(
+      getTransactionList({
+        limit: transaction.limit,
+        offset: transactionList.length,
+      }),
+    )
+      .unwrap()
+      .then(() => {
+        setIsError(false);
+      })
+      .catch(() => {
+        toast.error('Gagal memuat transaksi, coba beberapa saat lagi');
+        setIsError(true);
+      });
+  };
+
   useEffect(() => {
-    dispatch(getTransactionList());
-  }, []);
+    if (isFocused) {
+      getNextTransaction();
+    }
+    return () => {
+      dispatch(resetTransaction());
+    };
+  }, [isFocused]);
+
+  const onShowMorePressHandler = () => {
+    if (transaction.isMax) return;
+    getNextTransaction();
+  };
 
   return (
     <>
@@ -39,28 +78,57 @@ const TransactionsScreen = () => {
             ]}>
             Transaksi
           </Text>
-          <FlatList
-            style={styles.FlatlistStyle}
-            data={transactionList}
-            keyExtractor={item => item.created_on.toString()}
-            ItemSeparatorComponent={ItemSeparator}
-            contentContainerStyle={styles.PaddedContainer}
-            renderItem={({item}) => {
-              return <TransactionCard transaction={item} />;
-            }}
-            ListFooterComponent={FooterContent}
-          />
+          {transactionList.length > 1 ? (
+            <FlatList
+              style={styles.FlatlistStyle}
+              data={transactionList}
+              keyExtractor={item => item.created_on.toString()}
+              ItemSeparatorComponent={ItemSeparator}
+              contentContainerStyle={styles.PaddedContainer}
+              renderItem={({item}) => {
+                return <TransactionCard transaction={item} />;
+              }}
+              ListFooterComponent={() =>
+                FooterContent(onShowMorePressHandler, transaction.isMax)
+              }
+              ListEmptyComponent={EmptyListContent}
+            />
+          ) : (
+            <>
+              <EmptyListContent isError={isError} />
+            </>
+          )}
         </View>
       </View>
     </>
   );
 };
 
-const FooterContent = () => {
+const EmptyListContent = (props: {isError?: boolean}) => {
   return (
-    <Text style={[ThemeText.SubTitle_Bold, styles.FooterTextStyle]}>
-      Show more
-    </Text>
+    <View style={styles.EmptyListContainer}>
+      {
+        <Text style={[ThemeText.SubTitle_Light, styles.EmptyListTextStyle]}>
+          {props.isError
+            ? 'Gagal memuat transaksi'
+            : 'Maaf tidak ada histori transaksi saat ini'}
+        </Text>
+      }
+    </View>
+  );
+};
+
+const FooterContent = (onTextPress: () => void, hide?: boolean) => {
+  return (
+    <View style={styles.FooterContainerStyle}>
+      {!hide && (
+        <Text
+          onPress={onTextPress}
+          style={[ThemeText.SubTitle_Bold, styles.FooterTextStyle]}>
+          Show more
+        </Text>
+      )}
+    </View>
   );
 };
 
@@ -79,9 +147,15 @@ const styles = StyleSheet.create({
     marginTop: 12,
     // backgroundColor: 'gold',
   },
-  FooterTextStyle: {
-    textAlign: 'center',
-    color: Color.accent,
+  FooterContainerStyle: {
     margin: Dimens.padding * 2,
+  },
+  FooterTextStyle: {
+    color: Color.accent,
+    textAlign: 'center',
+  },
+  EmptyListContainer: {flex: 1, justifyContent: 'center', alignItems: 'center'},
+  EmptyListTextStyle: {
+    color: Color.inactive,
   },
 });
