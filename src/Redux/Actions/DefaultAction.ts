@@ -1,27 +1,30 @@
-import {ActionReducerMapBuilder} from '@reduxjs/toolkit';
-import {IDefaultState} from '../Reducers/DefaultReducer';
+import {IDefaultState} from '@Redux/Reducers/DefaultReducer';
+import {resetBalance} from '@Redux/Reducers/InformationReducer';
+import {resetTransaction} from '@Redux/Reducers/TransactionReducer';
+import {resetUser} from '@Redux/Reducers/UserReducer';
+import {ActionReducerMapBuilder, createAsyncThunk} from '@reduxjs/toolkit';
 
-// const GetContactPrefix: IEndpoint = 'GET_USER';
+const logoutUserPrefix = 'LOGOUT_USER/RESET_ALL';
 
-// export const fetchUser = createAsyncThunk(GetContactPrefix, async () => {
-//   const result = await APICall('GET_USER');
-
-//   return result;
-// });
+export const logoutUser = createAsyncThunk(
+  logoutUserPrefix,
+  async (_, {dispatch}) => {
+    dispatch(resetUser());
+    dispatch(resetBalance());
+    dispatch(resetTransaction());
+    return true;
+  },
+);
 
 export default (builder: ActionReducerMapBuilder<IDefaultState>) => {
-  // builder
-  //   .addCase(fetchUser.pending, state => {
-  //     state.error = null;
-  //     state.isLoading = true;
-  //   })
-  //   .addCase(fetchUser.rejected, (state, action: any) => {
-  //     state.error = {isError: true, message: action.payload.message};
-  //     state.isLoading = false;
-  //   })
-  //   .addCase(fetchUser.fulfilled, (state, action) => {
-  //     state.error = {isError: false, message: null};
-  //     state.isLoading = false;
-  //     state.userData = action.payload;
-  //   });
+  builder
+    .addCase(logoutUser.pending, () => {
+      console.log('[>] => Logging out user');
+    })
+    .addCase(logoutUser.rejected, () => {
+      console.log('[X] => Logging out user');
+    })
+    .addCase(logoutUser.fulfilled, () => {
+      console.log('[O] => Logging out user');
+    });
 };

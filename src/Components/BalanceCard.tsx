@@ -3,47 +3,68 @@ import React, {useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import Icon from './Commons/Icon';
 import FormatCurrency from '@Utilities/Tools/FormatCurrency';
+import {useSelector} from 'react-redux';
+import {IRootStateType} from '@Redux/Store';
 
-const secureString = (str: string) => str.replace(/./g, '•');
+const secureString = (str: string) =>
+  str.replace('.', '').replace(',', '').replace(/./g, '•');
 
-const BalanceCard = () => {
-  const balance = 10000;
+type IBalanceCardProps = {
+  isSimple?: boolean;
+};
+const BalanceCard = (props: IBalanceCardProps) => {
+  const balance = useSelector(
+    (state: IRootStateType) => state.information.balance,
+  );
+  // const balance = props.balance;
   const format = FormatCurrency(balance);
   const symbol = format.symbol;
 
   const [balanceSecured, setBalanceSecured] = useState(true);
 
-  const displayBalance = balanceSecured
-    ? secureString(format.whole)
-    : format.whole;
+  const displayBalance =
+    balanceSecured && !props.isSimple
+      ? secureString(format.whole)
+      : format.whole;
 
-  const displayDecimal = balanceSecured
-    ? secureString(format.decimal)
-    : format.decimal;
+  const displayDecimal =
+    balanceSecured && !props.isSimple
+      ? secureString(format.decimal)
+      : format.decimal;
 
   return (
     <View style={styles.RootComponentContainer}>
       <Text style={[ThemeText.H3_Regular, styles.TextColor]}>Saldo anda</Text>
-      <Text style={[ThemeText.Hero_Bold, styles.TextColor]}>
+      <Text
+        numberOfLines={1}
+        style={[ThemeText.H1_Bold, styles.TextColor, styles.TopSpace]}>
         <Text style={styles.TextDim}>{symbol + ' '}</Text>
         <Text>{displayBalance}</Text>
-        <Text style={!balanceSecured && styles.TextDim}>{displayDecimal}</Text>
-      </Text>
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <Text
-          style={[
-            ThemeText.Title_Regular,
-            styles.TextColor,
-            {marginRight: 10},
-          ]}>
-          Lihat Saldo
+        <Text style={(!balanceSecured || props.isSimple) && styles.TextDim}>
+          {displayDecimal}
         </Text>
-        <Icon
-          name={balanceSecured ? 'eye' : 'eye-off'}
-          color={Color.light}
-          onPress={() => setBalanceSecured(!balanceSecured)}
-        />
-      </View>
+      </Text>
+      {!props.isSimple && (
+        <View
+          style={[
+            {flexDirection: 'row', alignItems: 'center'},
+            styles.TopSpace,
+          ]}>
+          <Text
+            style={[
+              ThemeText.Title_Regular,
+              styles.TextColor,
+              {marginRight: 10},
+            ]}>
+            Lihat Saldo
+          </Text>
+          <Icon
+            name={balanceSecured ? 'eye' : 'eye-off'}
+            color={Color.light}
+            onPress={() => setBalanceSecured(!balanceSecured)}
+          />
+        </View>
+      )}
     </View>
   );
 };
@@ -53,7 +74,6 @@ export default BalanceCard;
 const styles = StyleSheet.create({
   RootComponentContainer: {
     width: '100%',
-    aspectRatio: 4 / 2,
     backgroundColor: Color.accent,
     padding: Dimens.padding * 1.4,
     borderRadius: Dimens.padding,
@@ -64,5 +84,8 @@ const styles = StyleSheet.create({
   },
   TextDim: {
     opacity: 0.75,
+  },
+  TopSpace: {
+    marginTop: 20,
   },
 });

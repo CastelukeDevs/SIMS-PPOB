@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  LayoutChangeEvent,
   StyleSheet,
   Text,
   TextStyle,
@@ -14,9 +15,10 @@ type IButtonPropTypes = {
   onPress: () => void;
   style?: ViewStyle;
   labelStyle?: TextStyle;
-  mode?: 'contained' | 'text';
+  mode?: 'contained' | 'text' | 'outlined';
   icon?: IIconProps;
   disabled?: boolean;
+  onLayout?: (event: LayoutChangeEvent) => void;
 };
 
 //TODO: add disable button function
@@ -33,10 +35,12 @@ const Button = (props: IButtonPropTypes) => {
   return (
     <TouchableOpacity
       disabled={props.disabled}
-      onPress={() => props.onPress()}
+      onPress={props.onPress}
+      onLayout={props.onLayout}
       style={[
         styles.RootComponentContainer,
         currentMode === 'contained' && styles.ModeContained,
+        currentMode === 'outlined' && styles.ModeOutlined,
         props.style,
         props.disabled && styles.Disabled,
       ]}>
@@ -67,7 +71,7 @@ export default Button;
 
 const styles = StyleSheet.create({
   RootComponentContainer: {
-    paddingHorizontal: 12,
+    paddingHorizontal: 6,
     paddingVertical: 16,
     flexDirection: 'row',
     justifyContent: 'center',
@@ -77,7 +81,12 @@ const styles = StyleSheet.create({
     backgroundColor: Color.accent,
     borderRadius: Dimens.radius,
   },
-  LabelText: {textAlign: 'center', marginHorizontal: 12},
+  ModeOutlined: {
+    borderWidth: 1,
+    borderColor: Color.accent,
+    borderRadius: Dimens.radius,
+  },
+  LabelText: {textAlign: 'center', marginHorizontal: 8},
   Disabled: {
     backgroundColor: Color.dark,
     opacity: 0.5,

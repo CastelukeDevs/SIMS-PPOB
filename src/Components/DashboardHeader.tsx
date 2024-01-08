@@ -1,5 +1,5 @@
 import React, {memo} from 'react';
-import {Image, StyleSheet, View} from 'react-native';
+import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 
 import AssetsManager from '@Assets/AssetsManager';
 
@@ -9,18 +9,18 @@ const avatarDefaultS = AssetsManager('Profile-S');
 
 type IDashboardHeaderProps = {
   avatar?: string;
+  onAvatarPress: () => void;
 };
 const DashboardHeader = (props: IDashboardHeaderProps) => {
   const imageSource = props.avatar ? {uri: props.avatar} : avatarDefaultS;
   return (
     <View style={styles.RootContainer}>
       <Logo isSmall />
-      <View style={styles.ImageContainer}>
-        <Image
-          source={imageSource}
-          style={[StyleSheet.absoluteFill, styles.ImageStyle]}
-        />
-      </View>
+      <TouchableOpacity
+        onPress={props.onAvatarPress}
+        style={styles.ImageContainer}>
+        <Image source={imageSource} style={styles.ImageStyle} />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -33,9 +33,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  ImageContainer: {width: 40, height: 40, borderRadius: 100},
+  ImageContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 100,
+    overflow: 'hidden',
+  },
   ImageStyle: {
-    resizeMode: 'contain',
+    // resizeMode: 'contain',
+    ...StyleSheet.absoluteFillObject,
     height: undefined,
     width: undefined,
   },

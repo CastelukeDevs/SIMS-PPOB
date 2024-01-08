@@ -24,4 +24,9 @@ enum IconList {
   'desktop',
   'rocket',
   'person',
+  'checkmark',
+  'close',
+  'arrow-back',
+  'logo-usd',
+  'pencil',
 }

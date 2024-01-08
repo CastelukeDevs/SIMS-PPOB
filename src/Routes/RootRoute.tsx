@@ -8,15 +8,23 @@ import {IDashboardTabNav, IRootNav} from './RouteTypes';
 
 import useAuth from '@Utilities/Hooks/useAuth';
 
+import Icon from '@Components/Commons/Icon';
+import {IIconName} from '@Utilities/Tools/IconTools';
+
 import SignInScreen from '@Screens/Pre-Auth/SignInScreen';
 import SignUpScreen from '@Screens/Pre-Auth/SignUpScreen';
+
+import ConfirmationModal from '@Screens/Modal/ConfirmationModal';
+import SuccessModal from '@Screens/Modal/SuccessModal';
+import TopUpFailedModal from '@Screens/Modal/FailedModal';
+
 import DashboardScreen from '@Screens/Dashboard/DashboardScreen';
-import SplashScreen from '@Screens/SplashScreen';
 import TopUpScreen from '@Screens/Dashboard/TopUpScreen';
 import TransactionsScreen from '@Screens/Dashboard/TransactionsScreen';
 import ProfileScreen from '@Screens/Dashboard/ProfileScreen';
-import Icon from '@Components/Commons/Icon';
-import {IIconName} from '@Utilities/Tools/IconTools';
+
+import SplashScreen from '@Screens/SplashScreen';
+import CreateTransactionScreen from '@Screens/CreateTransactionScreen';
 
 const Stack = createStackNavigator<IRootNav>();
 const Tab = createBottomTabNavigator<IDashboardTabNav>();
@@ -25,7 +33,9 @@ const RootRoute = () => {
   const {auth} = useAuth();
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{headerShown: false}}>
+      <Stack.Navigator
+        screenOptions={{headerShown: false}}
+        initialRouteName={!auth ? 'authSignInScreen' : 'dashboardRoute'}>
         {/* <Stack.Screen name="splashScreen" component={SplashScreen} /> */}
         {!auth ? (
           <>
@@ -35,8 +45,20 @@ const RootRoute = () => {
         ) : (
           <>
             <Stack.Screen name="dashboardRoute" component={DashboardRoute} />
+            <Stack.Screen
+              name="createTransactionScreen"
+              component={CreateTransactionScreen}
+            />
           </>
         )}
+        <Stack.Group screenOptions={{presentation: 'transparentModal'}}>
+          <Stack.Screen
+            name="confirmationModal"
+            component={ConfirmationModal}
+          />
+          <Stack.Screen name="successModal" component={SuccessModal} />
+          <Stack.Screen name="failedModal" component={TopUpFailedModal} />
+        </Stack.Group>
       </Stack.Navigator>
       <Toasts />
     </NavigationContainer>
@@ -56,7 +78,9 @@ const tabBarIcon = (name: IIconName, props: ITabBarIconProps) => {
 
 const DashboardRoute = () => {
   return (
-    <Tab.Navigator screenOptions={{headerShown: false}}>
+    <Tab.Navigator
+      screenOptions={{headerShown: false}}
+      initialRouteName="homeScreen">
       <Tab.Screen
         name="homeScreen"
         component={DashboardScreen}

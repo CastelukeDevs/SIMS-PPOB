@@ -2,8 +2,9 @@ import {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {fetchUser} from '@Redux/Actions/UserAction';
 import {IRootStateType} from '@Redux/Store';
-import {resetUser} from '@Redux/Reducers/UserReducer';
 import {toast} from '@backpackapp-io/react-native-toast';
+import {saveToken} from '@Utilities/Tools/AsyncStorageUtils';
+import {logoutUser} from '@Redux/Actions/DefaultAction';
 
 type IAuthHookReturn = {
   auth: boolean;
@@ -26,6 +27,7 @@ export default (): IAuthHookReturn => {
   useEffect(() => {
     //trigger fetch user to verify token validity from server
     if (user.token !== null) {
+      saveToken(user.token);
       dispatch(fetchUser());
     }
   }, [user.token]);
@@ -43,7 +45,7 @@ export default (): IAuthHookReturn => {
 
     if (user.status === 'error' && +errCode === 108) {
       setIsExpired(true);
-      dispatch(resetUser());
+      dispatch(logoutUser());
       toast.error('Sesi telah berakhir, silahkan login kembali');
     }
   }, [user.status]);

@@ -7,28 +7,25 @@ import {IUserState} from '@Redux/Reducers/UserReducer';
 
 import APICall from '@Utilities/APIs/APICall';
 import {IAPIResult, ICancelSignal, IEndpoint} from '@Utilities/APIs/APIUtils';
-import {IUserAuth, IUserMain} from '@Types/UserTypes';
-import {IRootStateType} from '@Redux/Store';
+import {IUser, IUserAuth, IUserMain} from '@Types/UserTypes';
+import ImagePathSanityCheck from '@Utilities/Tools/ImagePathSanityCheck';
 
 const GetUserPrefix: IEndpoint = 'USER_PROFILE';
+const EditUserProfilePrefix: IEndpoint = 'USER_PROFILE_UPDATE';
+const EditUserImagePrefix: IEndpoint = 'USER_PROFILE_UPDATE_IMAGE';
 const AuthSignInPrefix: IEndpoint = 'AUTH_LOGIN';
 const AuthSignUpPrefix: IEndpoint = 'AUTH_REGISTER';
 
-export const fetchUser = createAsyncThunk<
-  IAPIResult,
-  ICancelSignal | undefined,
-  {state: IRootStateType}
->(GetUserPrefix, async (props, {getState}) => {
-  const {user} = getState();
-  console.log('state', user.token);
+export const fetchUser = createAsyncThunk(
+  GetUserPrefix,
+  async (props?: ICancelSignal) => {
+    const data = await APICall(GetUserPrefix, {
+      abortController: props?.abortController,
+    });
 
-  const data = await APICall(GetUserPrefix, {
-    abortController: props?.abortController,
-    token: user.token!,
-  });
-
-  return data;
-});
+    return data;
+  },
+);
 
 export const authSignUpUser = createAsyncThunk(
   AuthSignUpPrefix,
@@ -54,6 +51,37 @@ export const authSignInUser = createAsyncThunk(
   },
 );
 
+export const editUserProfile = createAsyncThunk(
+  EditUserProfilePrefix,
+  async (props: IUserMain & ICancelSignal) => {
+    const data = await APICall(EditUserProfilePrefix, {
+      abortController: props?.abortController,
+      data: props,
+    });
+
+    return data;
+  },
+);
+
+export const editUserImage = createAsyncThunk(
+  EditUserImagePrefix,
+  async (props: {file: {uri: string}} & ICancelSignal) => {
+    const assets = {
+      uri: props.file.uri,
+      type: 'image/jpeg',
+      name: 'avatar.jpeg',
+    };
+
+    const data = await APICall(EditUserImagePrefix, {
+      abortController: props?.abortController,
+      data: {file: assets},
+      form: true,
+    });
+
+    return data;
+  },
+);
+
 export default (builder: ActionReducerMapBuilder<IUserState>) => {
   builder
     .addCase(fetchUser.pending, state => {
@@ -64,12 +92,19 @@ export default (builder: ActionReducerMapBuilder<IUserState>) => {
       state.status = 'error';
       state.error = {message: action.error.message!, error: action.error};
     })
-    .addCase(fetchUser.fulfilled, (state, action) => {
-      state.status = 'success';
-      state.error = null;
-      state.userData = action.payload.data;
-      //   state.userData = action.payload;
-    })
+    .addCase(
+      fetchUser.fulfilled,
+      (state, action: PayloadAction<IAPIResult<IUser>>) => {
+        const data = action.payload.data;
+        const imagePath = ImagePathSanityCheck(data.profile_image);
+        data.profile_image = imagePath;
+
+        state.status = 'success';
+        state.error = null;
+        state.userData = data;
+      },
+    )
+
     .addCase(authSignUpUser.pending, state => {
       state.status = 'fetching';
       state.error = null;
@@ -97,7 +132,48 @@ export default (builder: ActionReducerMapBuilder<IUserState>) => {
         state.status = 'success';
         state.error = null;
         state.token = action.payload.data.token;
-        //   state.userData = action.payload;
+      },
+    )
+    .addCase(editUserProfile.pending, state => {
+      state.status = 'fetching';
+      state.error = null;
+    })
+    .addCase(editUserProfile.rejected, (state, action) => {
+      state.status = 'error';
+      state.error = {message: action.error.message!, error: action.error};
+    })
+    .addCase(
+      editUserProfile.fulfilled,
+      (state, action: PayloadAction<IAPIResult<IUser>>) => {
+        const data = action.payload.data;
+        const imagePath = ImagePathSanityCheck(data.profile_image);
+        data.profile_image = imagePath;
+        console.log('newData', data);
+
+        state.status = 'success';
+        state.error = null;
+        state.userData = data;
+      },
+    )
+    .addCase(editUserImage.pending, state => {
+      state.status = 'fetching';
+      state.error = null;
+    })
+    .addCase(editUserImage.rejected, (state, action) => {
+      state.status = 'error';
+      state.error = {message: action.error.message!, error: action.error};
+    })
+    .addCase(
+      editUserImage.fulfilled,
+      (state, action: PayloadAction<IAPIResult<IUser>>) => {
+        const data = action.payload.data;
+        const imagePath = ImagePathSanityCheck(data.profile_image);
+        data.profile_image = imagePath;
+        console.log('newData', data);
+
+        state.status = 'success';
+        state.error = null;
+        state.userData = data;
       },
     );
 };
