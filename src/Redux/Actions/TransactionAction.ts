@@ -15,9 +15,11 @@ const CreateTransactionPrefix: IEndpoint = 'CREATE_TRANSACTION';
 
 export const getTransactionList = createAsyncThunk(
   GetTransactionPrefix,
-  async (props?: ICancelSignal) => {
+  async (props?: ICancelSignal & {limit?: number; offset?: number}) => {
     const data = await APICall(GetTransactionPrefix, {
       abortController: props?.abortController,
+      // data: {limit: props?.limit, offset: props?.offset},
+      params: {limit: props?.limit, offset: props?.offset},
     });
 
     return data;
@@ -57,11 +59,13 @@ export default (builder: ActionReducerMapBuilder<ITransactionState>) => {
           IAPIResult<{limit: number; offset: number; records: ITransaction[]}>
         >,
       ) => {
+        const data = action.payload.data;
         state.status = 'success';
         state.error = null;
-        state.transactionList = action.payload.data.records;
-        state.limit = action.payload.data.limit;
-        state.offset = action.payload.data.offset;
+        state.limit = +data.limit;
+        state.offset = +data.offset;
+        state.isMax = data.records.length < 10;
+        state.transactionList.push(...data.records);
       },
     )
     .addCase(createNewTransaction.pending, state => {
