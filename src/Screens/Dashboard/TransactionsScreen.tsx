@@ -75,7 +75,7 @@ const TransactionsScreen = ({navigation}: ITabNavProp<'transactionScreen'>) => {
             ]}>
             Transaksi
           </Text>
-          {transactionList.length > 1 ? (
+          {transactionList.length >= 1 ? (
             <FlatList
               style={styles.FlatlistStyle}
               data={transactionList}
