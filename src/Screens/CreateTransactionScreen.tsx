@@ -28,7 +28,11 @@ const CreateTransactionScreen = ({
   return (
     <>
       <Header label="Pembayaran" onBackPress={onBackPressHandler} />
-      <View style={[{paddingBottom: inset.bottom}, styles.RootScreenContainer]}>
+      <View
+        style={[
+          {paddingBottom: inset.bottom + Dimens.padding},
+          styles.RootScreenContainer,
+        ]}>
         <View style={styles.PaddedContainer}>
           <BalanceCard isSimple />
         </View>

@@ -15,31 +15,40 @@ const APICall = async (endpoint: IEndpoint, options?: IAPIsCallOption) => {
   const selectEndpoint = getEndpoint(endpoint)!;
   const token = await retrieveToken();
 
-  const requestHeader = selectEndpoint.auth
+  const authHeader = selectEndpoint.auth
     ? {Authorization: `Bearer ${token}`}
     : {};
 
-  const payloadForm = TransformObjectToForm(options?.data);
+  const requestHeader = options?.form
+    ? {
+        ...authHeader,
+        'Content-Type': 'multipart/form-data',
+      }
+    : {
+        ...authHeader,
+        'Content-Type': 'application/json',
+      };
+
+  const dataPayload = options?.form
+    ? TransformObjectToForm(options?.data)
+    : options?.data;
 
   console.log(`=> New API Call ${endpoint} with detail:`, {
     options,
-    payloadData: payloadForm,
-    requestHeader,
+    payloadData: dataPayload,
+    requestHeader: requestHeader,
   });
 
   return await axios({
     method: selectEndpoint.method,
     url: selectEndpoint.url,
-    data: options?.form ? payloadForm : options?.data,
+    data: dataPayload,
     params: options?.params,
     signal: options?.abortController?.signal,
-    headers: {
-      ...requestHeader,
-      'Content-Type': 'application/json',
-    },
+    headers: requestHeader,
   })
     .then((result: AxiosResponse<IAPIResult>) => {
-      console.log(`=> [O] axios request ${endpoint} success`, result);
+      console.log(`=> [O] AXIOS request ${endpoint} success`, result);
 
       return result.data;
     })
@@ -51,9 +60,9 @@ const APICall = async (endpoint: IEndpoint, options?: IAPIsCallOption) => {
         response: error.response?.data || error.response,
       };
       console.log(
-        `=> [X] axios request ${endpoint} error with code: ${errorPayload.code} //message: ${errorPayload.message}`,
+        `=> [X] AXIOS ${endpoint} code: ${errorPayload.code} msg: ${errorPayload.message}`,
       );
-      console.log('=> [X] axios error:', error);
+      console.log('=> [X] AXIOS error:', error);
 
       throw errorPayload;
     });

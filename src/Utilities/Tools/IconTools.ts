@@ -28,4 +28,5 @@ enum IconList {
   'close',
   'arrow-back',
   'logo-usd',
+  'pencil',
 }

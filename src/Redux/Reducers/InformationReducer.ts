@@ -20,9 +20,22 @@ export const informationInitialState: IInformationState = {
 const InformationReducer = createSlice({
   name: 'utility',
   initialState: informationInitialState,
-  reducers: {},
+  reducers: {
+    /**
+     * Reset all Business Information state
+     */
+    resetBusiness: () => {
+      return {...informationInitialState};
+    },
+    /**
+     * Reset all Business Information except banner and services
+     */
+    resetBalance: state => {
+      return {...state, error: null, status: 'idle', balance: 0};
+    },
+  },
   extraReducers: InformationAction,
 });
 
-export const {} = InformationReducer.actions;
+export const {resetBusiness, resetBalance} = InformationReducer.actions;
 export default InformationReducer.reducer;

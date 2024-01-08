@@ -47,20 +47,13 @@ export const getEndpoint = (endpoint: IEndpoint): IEndpointPool | undefined => {
 
 /**
  * Transform ANY JSON Payload to form data
- * This prove useful when the JSON Payload includes array
  */
 export const TransformObjectToForm = (object: any): FormData => {
   if (object === null || object === undefined) return object;
   const formData = new FormData();
   Object.keys(object).forEach(key => {
     const value = object[key];
-    if (Array.isArray(value)) {
-      value.forEach(v => {
-        formData.append(`${key}[]`, JSON.stringify(v));
-      });
-    } else {
-      formData.append(key, object[key]);
-    }
+    formData.append(key, value);
   });
   return formData;
 };

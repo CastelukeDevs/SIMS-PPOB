@@ -19,10 +19,7 @@ const DashboardHeader = (props: IDashboardHeaderProps) => {
       <TouchableOpacity
         onPress={props.onAvatarPress}
         style={styles.ImageContainer}>
-        <Image
-          source={imageSource}
-          style={[StyleSheet.absoluteFill, styles.ImageStyle]}
-        />
+        <Image source={imageSource} style={styles.ImageStyle} />
       </TouchableOpacity>
     </View>
   );
@@ -36,9 +33,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  ImageContainer: {width: 40, height: 40, borderRadius: 100},
+  ImageContainer: {
+    width: 40,
+    height: 40,
+    borderRadius: 100,
+    overflow: 'hidden',
+  },
   ImageStyle: {
-    resizeMode: 'contain',
+    // resizeMode: 'contain',
+    ...StyleSheet.absoluteFillObject,
     height: undefined,
     width: undefined,
   },

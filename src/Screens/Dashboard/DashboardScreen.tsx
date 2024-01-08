@@ -65,7 +65,7 @@ const DashboardScreen = ({navigation}: ITabNavProp<'homeScreen'>) => {
         <Text style={[ThemeText.H2_Regular, {opacity: 0.7}]}>
           Selamat datang,
         </Text>
-        <Text style={ThemeText.H1_Bold}>
+        <Text numberOfLines={1} style={ThemeText.H1_Bold}>
           {user?.first_name} {user?.last_name}
         </Text>
       </View>
