@@ -15,8 +15,10 @@ type IAvatarProps = {
 const Avatar = (props: IAvatarProps) => {
   const userAvatar = props.avatar ? {uri: props.avatar} : avatarAssets;
   return (
-    <View style={styles.RootComponentContainer}>
-      <Image source={userAvatar} style={styles.ImageStyle} />
+    <View>
+      <View style={styles.RootComponentContainer}>
+        <Image source={userAvatar} style={styles.ImageStyle} />
+      </View>
       <TouchableOpacity style={styles.ButtonStyle} onPress={props.onEditPress}>
         <Icon name="pencil" />
       </TouchableOpacity>
@@ -28,6 +30,7 @@ export default Avatar;
 
 const styles = StyleSheet.create({
   RootComponentContainer: {
+    overflow: 'hidden',
     height: 130,
     width: 130,
     borderRadius: 130,
@@ -35,9 +38,7 @@ const styles = StyleSheet.create({
     borderColor: Color.dark + Opacity[15],
   },
   ImageStyle: {
-    resizeMode: 'contain',
-    width: '100%',
-    height: '100%',
+    ...StyleSheet.absoluteFillObject,
   },
   ButtonStyle: {
     position: 'absolute',
