@@ -13,6 +13,8 @@ import Button from '@Components/Commons/Button';
 import {useDispatch, useSelector} from 'react-redux';
 import {IRootStateType} from '@Redux/Store';
 import {authSignInUser} from '@Redux/Actions/UserAction';
+import {IDispatchError} from '@Types/CommonTypes';
+import {toast} from '@backpackapp-io/react-native-toast';
 
 const SignInScreen = ({navigation}: IMainNavProp<'authSignInScreen'>) => {
   const inset = useSafeAreaInsets();
@@ -46,7 +48,15 @@ const SignInScreen = ({navigation}: IMainNavProp<'authSignInScreen'>) => {
     // const validPassword = ValidateString(password, 'email');
     // setPasswordError(validPassword);
     if (checkValidity() && stateReady) {
-      dispatch(authSignInUser({email, password}));
+      dispatch(authSignInUser({email, password}))
+        .unwrap()
+        .catch((err: IDispatchError) => {
+          toast.error(err.message);
+          if (err.code === '103') {
+            setEmailError([err.message]);
+            setPasswordError([err.message]);
+          }
+        });
     }
   };
   const onRegisterHandler = () => {
